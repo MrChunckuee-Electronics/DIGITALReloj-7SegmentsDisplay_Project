@@ -13,7 +13,7 @@ extern "C" {
 #endif
     
     
-uint8_t NUMBERS_OF_DISPLAYS     =   4;
+uint8_t NUMBERS_OF_DISPLAYS     =   6;
 bool dotsEnable = false;
     
 /*********** P I N O U T  *  D E F I N E S ************************************/
@@ -75,10 +75,10 @@ uint8_t digits[]={          //  index value=digit showed on display
 #define DIG_OFF     16
 
 // digits in ram
-uint8_t display_values[6];
+uint8_t display_values[7];
 
 /*********** P R O T O T Y P E S **********************************************/
-void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4);
+void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4, uint8_t D5, uint8_t D6);
 void DISPLAY_Reset(void);
 void DISPLAY_Write(uint16_t num);
 void DISPLAY_Update(void);

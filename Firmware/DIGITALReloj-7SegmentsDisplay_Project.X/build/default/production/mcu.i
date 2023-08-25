@@ -9791,7 +9791,12 @@ double yn(int, double);
 
 
 # 1 "./mcu.h" 1
-# 19 "./mcu.h"
+# 18 "./mcu.h"
+uint8_t displayMode = 0;
+
+enum {showTime = 0, showDate};
+
+
 void SYSTEM_Initialize(void);
 void SYSTEM_Process(void);
 void MCU_Initialize(void);
@@ -9800,13 +9805,16 @@ void IO_LEDPrintChar(uint8_t LEDCHAR);
 void IO_LEDHello(void);
 void TMR0_Initialize(void);
 void RTC_Initialize(void);
-void DisplayDateOnLCD(unsigned char* pDateArray);
-void DisplayTimeToLCD(unsigned char* pTimeArray);
+
+void MCU_SetModeDisplay(void);
+void MCU_SetOutDisplay(void);
+void UpdateDateToDisplay(unsigned char* pDateArray);
+void UpdateTimeToDisplay(unsigned char* pTimeArray);
 # 25 "./main.h" 2
 
 # 1 "./Display7seg_74HC595.h" 1
 # 16 "./Display7seg_74HC595.h"
-uint8_t NUMBERS_OF_DISPLAYS = 4;
+uint8_t NUMBERS_OF_DISPLAYS = 6;
 _Bool dotsEnable = 0;
 # 48 "./Display7seg_74HC595.h"
 uint8_t digits[]={
@@ -9829,10 +9837,10 @@ uint8_t digits[]={
     (uint8_t)~(0)
     };
 # 78 "./Display7seg_74HC595.h"
-uint8_t display_values[6];
+uint8_t display_values[7];
 
 
-void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4);
+void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4, uint8_t D5, uint8_t D6);
 void DISPLAY_Reset(void);
 void DISPLAY_Write(uint16_t num);
 void DISPLAY_Update(void);
@@ -9883,9 +9891,11 @@ void ISR_Close(void);
 
 
 uint8_t tmr0_counterMs = 0;
+uint8_t mSeconds = 0, Seconds = 0;
 uint8_t dotsCounter = 0;
 uint8_t timeToDisplay[7];
-# 23 "mcu.c"
+uint8_t dateToDisplay[7];
+# 25 "mcu.c"
 void SYSTEM_Initialize(void){
     MCU_Initialize();
     OSCILLATOR_Initialize();
@@ -9896,23 +9906,19 @@ void SYSTEM_Initialize(void){
 
     ISR_Initialize();
 }
-# 42 "mcu.c"
+# 44 "mcu.c"
 void SYSTEM_Process(void){
     if(TMR0_OVR_FLAG == 1){
         tmr0_counterMs++;
         if(tmr0_counterMs>99){
             tmr0_counterMs = 0;
-            dotsCounter++;
-            if(dotsCounter>5){
-                dotsCounter = 0;
-                dotsEnable ^= 1;
-            }
-            DisplayTimeToLCD(Get_DS1307_RTC_Time());
+            MCU_SetModeDisplay();
+            MCU_SetOutDisplay();
         }
         TMR0_OVR_FLAG = 0;
     }
 }
-# 66 "mcu.c"
+# 64 "mcu.c"
 void MCU_Initialize(void){
 
     ANSELA = 0;
@@ -9930,7 +9936,7 @@ void MCU_Initialize(void){
     PORTC = 0x00;
 
 }
-# 92 "mcu.c"
+# 90 "mcu.c"
 void OSCILLATOR_Initialize(void){
 
     OSCCONbits.IRCF=0b111;
@@ -9954,31 +9960,78 @@ void TMR0_Initialize(void){
 
 void RTC_Initialize(void){
 
- Set_DS1307_RTC_Time(1, 5, 7, 0);
+ Set_DS1307_RTC_Time(0, 12, 12, 0);
 
- Set_DS1307_RTC_Date(4, 8, 23, 5);
+ Set_DS1307_RTC_Date(20, 8, 23, 7);
 }
 
-void DisplayTimeToLCD(unsigned char* pTimeArray){
-
-    timeToDisplay[0] = (pTimeArray[2]/10);
-    timeToDisplay[1] = (pTimeArray[2]%10);
-
-    timeToDisplay[2] = (pTimeArray[1]/10);
-    timeToDisplay[3] = (pTimeArray[1]%10);
-
-    timeToDisplay[4] = (pTimeArray[0]/10);
-    timeToDisplay[5] = (pTimeArray[0]%10);
-
-
-
-
-
-
-
-   DISPLAY_Set(timeToDisplay[0], timeToDisplay[1], timeToDisplay[2], timeToDisplay[3]);
+void MCU_SetModeDisplay(void){
+    mSeconds++;
+    if(mSeconds>9){
+        mSeconds = 0;
+        Seconds ++;
+        if(Seconds >59)
+            Seconds = 0;
+        switch(Seconds){
+            case 0:
+                displayMode = showTime;
+                break;
+            case 49:
+                displayMode = showDate;
+                break;
+            default:
+                break;
+        }
+    }
 }
 
-void DisplayDateOnLCD( unsigned char* pDateArray ){
-# 164 "mcu.c"
+void MCU_SetOutDisplay(void){
+    switch (displayMode){
+        case showTime:
+            dotsCounter++;
+            if(dotsCounter>9){
+                dotsCounter = 0;
+                dotsEnable ^= 1;
+            }
+            UpdateTimeToDisplay(Get_DS1307_RTC_Time());
+            break;
+        case showDate:
+            UpdateDateToDisplay(Get_DS1307_RTC_Date());
+            break;
+        default:
+            break;
+    }
+}
+
+void UpdateTimeToDisplay(unsigned char* pTimeArray){
+
+    timeToDisplay[0] = pTimeArray[2]/10;
+    timeToDisplay[1] = pTimeArray[2]%10;
+
+    timeToDisplay[2] = pTimeArray[1]/10;
+    timeToDisplay[3] = pTimeArray[1]%10;
+
+    timeToDisplay[4] = pTimeArray[0]/10;
+    timeToDisplay[5] = pTimeArray[0]%10;
+
+
+
+
+
+
+   DISPLAY_Set(timeToDisplay[0], timeToDisplay[1], timeToDisplay[2], timeToDisplay[3], timeToDisplay[4], timeToDisplay[5]);
+}
+
+void UpdateDateToDisplay( unsigned char* pDateArray ){
+
+    dateToDisplay[0] = pDateArray[1]/10;
+    dateToDisplay[1] = pDateArray[1]%10;
+
+    dateToDisplay[2] = pDateArray[2]/10;
+    dateToDisplay[3] = pDateArray[2]%10;
+
+    dateToDisplay[4] = pDateArray[3]/10;
+    dateToDisplay[5] = pDateArray[3]%10;
+# 196 "mcu.c"
+    DISPLAY_Set(dateToDisplay[0], dateToDisplay[1], dateToDisplay[2], dateToDisplay[3], dateToDisplay[4], dateToDisplay[5]);
 }

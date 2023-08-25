@@ -13,9 +13,13 @@
  *
  *******************************************************************************
  * Rev.         Date            Comment
- *   v0.0.1     30/07/2023      - Creación y prueba de funcionamiento, se implemento 
+ *  v0.0.1      30/07/2023      - Creación y prueba de funcionamiento, se implemento 
  *                                la rutina para iniciazar el RTC y despues mostar los 
  *                                datos en el displays de momento el formato es HH:MM
+ *  v0.1.0      17/08/2023      - Se agrego soporte para 6 displays 
+ *                              - Se implemento la funcion para mostrar la fecha cada 
+ *                                determinado tiempo (actualmente 50 segundos muestra 
+ *                                el tiempo y 10 segundos la fecha).
  ******************************************************************************/
 
 #include "device_config.h" //Config fuses

@@ -9785,7 +9785,12 @@ double yn(int, double);
 
 
 # 1 "./mcu.h" 1
-# 19 "./mcu.h"
+# 18 "./mcu.h"
+uint8_t displayMode = 0;
+
+enum {showTime = 0, showDate};
+
+
 void SYSTEM_Initialize(void);
 void SYSTEM_Process(void);
 void MCU_Initialize(void);
@@ -9794,13 +9799,16 @@ void IO_LEDPrintChar(uint8_t LEDCHAR);
 void IO_LEDHello(void);
 void TMR0_Initialize(void);
 void RTC_Initialize(void);
-void DisplayDateOnLCD(unsigned char* pDateArray);
-void DisplayTimeToLCD(unsigned char* pTimeArray);
+
+void MCU_SetModeDisplay(void);
+void MCU_SetOutDisplay(void);
+void UpdateDateToDisplay(unsigned char* pDateArray);
+void UpdateTimeToDisplay(unsigned char* pTimeArray);
 # 25 "./main.h" 2
 
 # 1 "./Display7seg_74HC595.h" 1
 # 16 "./Display7seg_74HC595.h"
-uint8_t NUMBERS_OF_DISPLAYS = 4;
+uint8_t NUMBERS_OF_DISPLAYS = 6;
 _Bool dotsEnable = 0;
 # 48 "./Display7seg_74HC595.h"
 uint8_t digits[]={
@@ -9823,10 +9831,10 @@ uint8_t digits[]={
     (uint8_t)~(0)
     };
 # 78 "./Display7seg_74HC595.h"
-uint8_t display_values[6];
+uint8_t display_values[7];
 
 
-void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4);
+void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4, uint8_t D5, uint8_t D6);
 void DISPLAY_Reset(void);
 void DISPLAY_Write(uint16_t num);
 void DISPLAY_Update(void);
@@ -9874,48 +9882,55 @@ void ISR_Initialize(void);
 void ISR_Close(void);
 # 29 "./main.h" 2
 # 18 "Display7seg_74HC595.c" 2
-# 35 "Display7seg_74HC595.c"
-void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4){
-    switch(NUMBERS_OF_DISPLAYS){
-        case 1:
-            display_values[1]=digits[16];
-            display_values[0]=digits[D1];
-            break;
-        case 2:
-            display_values[1]=digits[D1];
-            display_values[0]=digits[D2];
-            break;
-        case 3:
-            break;
-        case 4:
+# 34 "Display7seg_74HC595.c"
+void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4, uint8_t D5, uint8_t D6){
+
+    switch (displayMode){
+        case showTime:
             if(dotsEnable){
-                display_values[3] = digits[D1];
-                display_values[2] = (digits[D2])&((uint8_t)~0b00100000);
-                display_values[1] = (digits[D3])&((uint8_t)~0b00100000);
-                display_values[0] = digits[D4];
+                display_values[5] = digits[D1];
+                display_values[4] = (digits[D2])&((uint8_t)~0b00100000);
+                display_values[3] = (~digits[D3])|((uint8_t)0b00100000);
+                display_values[2] = (~digits[D4])|((uint8_t)0b00100000);
+                display_values[1] = (digits[D5])&((uint8_t)~0b00100000);
+                display_values[0] = digits[D6];
             }
             else{
-                display_values[3] = digits[D1];
-                display_values[2] = digits[D2];
-                display_values[1] = digits[D3];
-                display_values[0] = digits[D4];
+                display_values[5] = digits[D1];
+                display_values[4] = digits[D2];
+                display_values[3] = ~digits[D3];
+                display_values[2] = ~digits[D4];
+                display_values[1] = digits[D5];
+                display_values[0] = digits[D6];
             }
+            break;
+        case showDate:
+            display_values[5] = digits[D1];
+            display_values[4] = (digits[D2])&((uint8_t)~0b00100000);
+            display_values[3] = ~digits[D3];
+            display_values[2] = (~digits[D4])|((uint8_t)0b00100000);
+            display_values[1] = digits[D5];
+            display_values[0] = digits[D6];
             break;
         default:
             break;
     }
+
+
     DISPLAY_Update();
 }
-# 75 "Display7seg_74HC595.c"
+# 79 "Display7seg_74HC595.c"
 void DISPLAY_Reset(void){
-    DISPLAY_Set(16, 16, 16, 16);
+    DISPLAY_Set(16, 16, 16, 16, 16, 16);
 }
-# 87 "Display7seg_74HC595.c"
+# 91 "Display7seg_74HC595.c"
 void DISPLAY_Write(uint16_t num){
     uint8_t digit1=16;
     uint8_t digit2=16;
     uint8_t digit3=16;
     uint8_t digit4=16;
+    uint8_t digit5=16;
+    uint8_t digit6=16;
 
     if (num<10){
         digit4 = (uint8_t)(num);
@@ -9935,9 +9950,9 @@ void DISPLAY_Write(uint16_t num){
         digit2 = (uint8_t)((num%1000)/100);
         digit1 = (uint8_t)(num/1000);
     }
-  DISPLAY_Set(digit1, digit2, digit3, digit4);
+  DISPLAY_Set(digit1, digit2, digit3, digit4, digit5, digit6);
   }
-# 122 "Display7seg_74HC595.c"
+# 128 "Display7seg_74HC595.c"
 void DISPLAY_Update(void){
     if((NUMBERS_OF_DISPLAYS % 2) == 0){
         for (int8_t i=0; i<NUMBERS_OF_DISPLAYS; i++){
@@ -9953,7 +9968,7 @@ void DISPLAY_Update(void){
     do { LATBbits.LATB1 = 1; } while(0);
     do { LATBbits.LATB1 = 0; } while(0);
   }
-# 146 "Display7seg_74HC595.c"
+# 152 "Display7seg_74HC595.c"
 void DRIVER_74HC595_ShiftOut(uint8_t data){
 
     for (uint8_t i=0; i<8; i++){

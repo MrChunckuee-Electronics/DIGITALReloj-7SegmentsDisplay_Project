@@ -857,11 +857,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 "16576
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC18F-K_DFP/1.5.114/xc8\pic\include\proc\pic18f25k22.h: 16576: __asm("TOSU equ 0FFFh");
 [; <" TOSU equ 0FFFh ;# ">
+"18 ./mcu.h
+[; ;./mcu.h: 18: uint8_t displayMode = 0;
+[v _displayMode `uc ~T0 @X0 1 e ]
+[i _displayMode
+-> -> 0 `i `uc
+]
 "16 ./Display7seg_74HC595.h
-[; ;./Display7seg_74HC595.h: 16: uint8_t NUMBERS_OF_DISPLAYS = 4;
+[; ;./Display7seg_74HC595.h: 16: uint8_t NUMBERS_OF_DISPLAYS = 6;
 [v _NUMBERS_OF_DISPLAYS `uc ~T0 @X0 1 e ]
 [i _NUMBERS_OF_DISPLAYS
--> -> 4 `i `uc
+-> -> 6 `i `uc
 ]
 "17
 [; ;./Display7seg_74HC595.h: 17: _Bool dotsEnable = 0;
@@ -894,8 +900,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 ..
 ]
 "78
-[; ;./Display7seg_74HC595.h: 78: uint8_t display_values[6];
-[v _display_values `uc ~T0 @X0 -> 6 `i e ]
+[; ;./Display7seg_74HC595.h: 78: uint8_t display_values[7];
+[v _display_values `uc ~T0 @X0 -> 7 `i e ]
 "15 ./isr_manager.h
 [; ;./isr_manager.h: 15: _Bool TMR0_OVR_FLAG = 0;
 [v _TMR0_OVR_FLAG `a ~T0 @X0 1 e ]

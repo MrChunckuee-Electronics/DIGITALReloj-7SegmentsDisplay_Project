@@ -7,7 +7,7 @@
 # 1 "C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC18F-K_DFP/1.5.114/xc8\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
 # 1 "main.c" 2
-# 19 "main.c"
+# 25 "main.c"
 # 1 "./device_config.h" 1
 # 17 "./device_config.h"
 # 1 "C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC18F-K_DFP/1.5.114/xc8\\pic\\include\\xc.h" 1 3
@@ -9266,7 +9266,7 @@ unsigned char __t3rd16on(void);
 
 
 #pragma config EBTRB = OFF
-# 19 "main.c" 2
+# 25 "main.c" 2
 
 # 1 "./main.h" 1
 # 19 "./main.h"
@@ -9850,7 +9850,12 @@ double yn(int, double);
 
 
 # 1 "./mcu.h" 1
-# 19 "./mcu.h"
+# 18 "./mcu.h"
+uint8_t displayMode = 0;
+
+enum {showTime = 0, showDate};
+
+
 void SYSTEM_Initialize(void);
 void SYSTEM_Process(void);
 void MCU_Initialize(void);
@@ -9859,13 +9864,16 @@ void IO_LEDPrintChar(uint8_t LEDCHAR);
 void IO_LEDHello(void);
 void TMR0_Initialize(void);
 void RTC_Initialize(void);
-void DisplayDateOnLCD(unsigned char* pDateArray);
-void DisplayTimeToLCD(unsigned char* pTimeArray);
+
+void MCU_SetModeDisplay(void);
+void MCU_SetOutDisplay(void);
+void UpdateDateToDisplay(unsigned char* pDateArray);
+void UpdateTimeToDisplay(unsigned char* pTimeArray);
 # 25 "./main.h" 2
 
 # 1 "./Display7seg_74HC595.h" 1
 # 16 "./Display7seg_74HC595.h"
-uint8_t NUMBERS_OF_DISPLAYS = 4;
+uint8_t NUMBERS_OF_DISPLAYS = 6;
 _Bool dotsEnable = 0;
 # 48 "./Display7seg_74HC595.h"
 uint8_t digits[]={
@@ -9888,10 +9896,10 @@ uint8_t digits[]={
     (uint8_t)~(0)
     };
 # 78 "./Display7seg_74HC595.h"
-uint8_t display_values[6];
+uint8_t display_values[7];
 
 
-void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4);
+void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4, uint8_t D5, uint8_t D6);
 void DISPLAY_Reset(void);
 void DISPLAY_Write(uint16_t num);
 void DISPLAY_Update(void);
@@ -9938,7 +9946,7 @@ _Bool TMR0_OVR_FLAG = 0;
 void ISR_Initialize(void);
 void ISR_Close(void);
 # 29 "./main.h" 2
-# 20 "main.c" 2
+# 26 "main.c" 2
 
 
 void main(void) {

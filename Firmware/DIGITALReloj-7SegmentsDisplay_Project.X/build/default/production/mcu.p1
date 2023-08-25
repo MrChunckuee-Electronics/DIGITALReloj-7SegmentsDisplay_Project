@@ -1,12 +1,12 @@
 Version 4.0 HI-TECH Software Intermediate Code
-"21 ./mcu.h
-[; ;./mcu.h: 21: void MCU_Initialize(void);
+"25 ./mcu.h
+[; ;./mcu.h: 25: void MCU_Initialize(void);
 [v _MCU_Initialize `(v ~T0 @X0 0 ef ]
-"22
-[; ;./mcu.h: 22: void OSCILLATOR_Initialize(void);
+"26
+[; ;./mcu.h: 26: void OSCILLATOR_Initialize(void);
 [v _OSCILLATOR_Initialize `(v ~T0 @X0 0 ef ]
-"25
-[; ;./mcu.h: 25: void TMR0_Initialize(void);
+"29
+[; ;./mcu.h: 29: void TMR0_Initialize(void);
 [v _TMR0_Initialize `(v ~T0 @X0 0 ef ]
 "75 ./i2c.h
 [; ;./i2c.h: 75: void I2C1_Init(void);
@@ -21,12 +21,12 @@ Version 4.0 HI-TECH Software Intermediate Code
 "17 ./isr_manager.h
 [; ;./isr_manager.h: 17: void ISR_Initialize(void);
 [v _ISR_Initialize `(v ~T0 @X0 0 ef ]
-"28 ./mcu.h
-[; ;./mcu.h: 28: void DisplayTimeToLCD(unsigned char* pTimeArray);
-[v _DisplayTimeToLCD `(v ~T0 @X0 0 ef1`*uc ]
-"39 ./ds1307.h
-[; ;./ds1307.h: 39: unsigned char* Get_DS1307_RTC_Time(void);
-[v _Get_DS1307_RTC_Time `(*uc ~T0 @X0 0 ef ]
+"32 ./mcu.h
+[; ;./mcu.h: 32: void MCU_SetModeDisplay(void);
+[v _MCU_SetModeDisplay `(v ~T0 @X0 0 ef ]
+"33
+[; ;./mcu.h: 33: void MCU_SetOutDisplay(void);
+[v _MCU_SetOutDisplay `(v ~T0 @X0 0 ef ]
 "53 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC18F-K_DFP/1.5.114/xc8\pic\include\proc\pic18f25k22.h
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC18F-K_DFP/1.5.114/xc8\pic\include\proc\pic18f25k22.h: 53: extern volatile unsigned char ANSELA __attribute__((address(0xF38)));
 [v _ANSELA `Vuc ~T0 @X0 0 e@3896 ]
@@ -134,9 +134,25 @@ Version 4.0 HI-TECH Software Intermediate Code
 "40
 [; ;./ds1307.h: 40: void Set_DS1307_RTC_Date(unsigned char,unsigned char,unsigned char,unsigned char);
 [v _Set_DS1307_RTC_Date `(v ~T0 @X0 0 ef4`uc`uc`uc`uc ]
+"127 mcu.c
+[; ;mcu.c: 127:                 displayMode = showTime;
+[c E6654 0 1 .. ]
+[n E6654 . showTime showDate  ]
+"35 ./mcu.h
+[; ;./mcu.h: 35: void UpdateTimeToDisplay(unsigned char* pTimeArray);
+[v _UpdateTimeToDisplay `(v ~T0 @X0 0 ef1`*uc ]
+"39 ./ds1307.h
+[; ;./ds1307.h: 39: unsigned char* Get_DS1307_RTC_Time(void);
+[v _Get_DS1307_RTC_Time `(*uc ~T0 @X0 0 ef ]
+"34 ./mcu.h
+[; ;./mcu.h: 34: void UpdateDateToDisplay(unsigned char* pDateArray);
+[v _UpdateDateToDisplay `(v ~T0 @X0 0 ef1`*uc ]
+"41 ./ds1307.h
+[; ;./ds1307.h: 41: unsigned char* Get_DS1307_RTC_Date(void);
+[v _Get_DS1307_RTC_Date `(*uc ~T0 @X0 0 ef ]
 "81 ./Display7seg_74HC595.h
-[; ;./Display7seg_74HC595.h: 81: void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4);
-[v _DISPLAY_Set `(v ~T0 @X0 0 ef4`uc`uc`uc`uc ]
+[; ;./Display7seg_74HC595.h: 81: void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4, uint8_t D5, uint8_t D6);
+[v _DISPLAY_Set `(v ~T0 @X0 0 ef6`uc`uc`uc`uc`uc`uc ]
 "55 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC18F-K_DFP/1.5.114/xc8\pic\include\proc\pic18f25k22.h
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC18F-K_DFP/1.5.114/xc8\pic\include\proc\pic18f25k22.h: 55: __asm("ANSELA equ 0F38h");
 [; <" ANSELA equ 0F38h ;# ">
@@ -869,11 +885,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 "16576
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC18F-K_DFP/1.5.114/xc8\pic\include\proc\pic18f25k22.h: 16576: __asm("TOSU equ 0FFFh");
 [; <" TOSU equ 0FFFh ;# ">
+"18 ./mcu.h
+[; ;./mcu.h: 18: uint8_t displayMode = 0;
+[v _displayMode `uc ~T0 @X0 1 e ]
+[i _displayMode
+-> -> 0 `i `uc
+]
 "16 ./Display7seg_74HC595.h
-[; ;./Display7seg_74HC595.h: 16: uint8_t NUMBERS_OF_DISPLAYS = 4;
+[; ;./Display7seg_74HC595.h: 16: uint8_t NUMBERS_OF_DISPLAYS = 6;
 [v _NUMBERS_OF_DISPLAYS `uc ~T0 @X0 1 e ]
 [i _NUMBERS_OF_DISPLAYS
--> -> 4 `i `uc
+-> -> 6 `i `uc
 ]
 "17
 [; ;./Display7seg_74HC595.h: 17: _Bool dotsEnable = 0;
@@ -906,8 +928,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 ..
 ]
 "78
-[; ;./Display7seg_74HC595.h: 78: uint8_t display_values[6];
-[v _display_values `uc ~T0 @X0 -> 6 `i e ]
+[; ;./Display7seg_74HC595.h: 78: uint8_t display_values[7];
+[v _display_values `uc ~T0 @X0 -> 7 `i e ]
 "15 ./isr_manager.h
 [; ;./isr_manager.h: 15: _Bool TMR0_OVR_FLAG = 0;
 [v _TMR0_OVR_FLAG `a ~T0 @X0 1 e ]
@@ -921,246 +943,401 @@ Version 4.0 HI-TECH Software Intermediate Code
 -> -> 0 `i `uc
 ]
 "11
-[; ;mcu.c: 11: uint8_t dotsCounter = 0;
+[; ;mcu.c: 11: uint8_t mSeconds = 0, Seconds = 0;
+[v _mSeconds `uc ~T0 @X0 1 e ]
+[i _mSeconds
+-> -> 0 `i `uc
+]
+[v _Seconds `uc ~T0 @X0 1 e ]
+[i _Seconds
+-> -> 0 `i `uc
+]
+"12
+[; ;mcu.c: 12: uint8_t dotsCounter = 0;
 [v _dotsCounter `uc ~T0 @X0 1 e ]
 [i _dotsCounter
 -> -> 0 `i `uc
 ]
-"12
-[; ;mcu.c: 12: uint8_t timeToDisplay[7];
+"13
+[; ;mcu.c: 13: uint8_t timeToDisplay[7];
 [v _timeToDisplay `uc ~T0 @X0 -> 7 `i e ]
-"23
-[; ;mcu.c: 23: void SYSTEM_Initialize(void){
+"14
+[; ;mcu.c: 14: uint8_t dateToDisplay[7];
+[v _dateToDisplay `uc ~T0 @X0 -> 7 `i e ]
+"25
+[; ;mcu.c: 25: void SYSTEM_Initialize(void){
 [v _SYSTEM_Initialize `(v ~T0 @X0 1 ef ]
 {
 [e :U _SYSTEM_Initialize ]
 [f ]
-"24
-[; ;mcu.c: 24:     MCU_Initialize();
-[e ( _MCU_Initialize ..  ]
-"25
-[; ;mcu.c: 25:     OSCILLATOR_Initialize();
-[e ( _OSCILLATOR_Initialize ..  ]
 "26
-[; ;mcu.c: 26:     TMR0_Initialize();
-[e ( _TMR0_Initialize ..  ]
+[; ;mcu.c: 26:     MCU_Initialize();
+[e ( _MCU_Initialize ..  ]
 "27
-[; ;mcu.c: 27:     I2C1_Init();
-[e ( _I2C1_Init ..  ]
+[; ;mcu.c: 27:     OSCILLATOR_Initialize();
+[e ( _OSCILLATOR_Initialize ..  ]
 "28
-[; ;mcu.c: 28:     DISPLAY_Reset();
-[e ( _DISPLAY_Reset ..  ]
+[; ;mcu.c: 28:     TMR0_Initialize();
+[e ( _TMR0_Initialize ..  ]
 "29
-[; ;mcu.c: 29:     _delay((unsigned long)((10)*(16000000/4000.0)));
-[e ( __delay (1 -> * -> -> 10 `i `d / -> -> 16000000 `l `d .4000.0 `ul ]
+[; ;mcu.c: 29:     I2C1_Init();
+[e ( _I2C1_Init ..  ]
+"30
+[; ;mcu.c: 30:     DISPLAY_Reset();
+[e ( _DISPLAY_Reset ..  ]
 "31
-[; ;mcu.c: 31:     ISR_Initialize();
+[; ;mcu.c: 31:     _delay((unsigned long)((10)*(16000000/4000.0)));
+[e ( __delay (1 -> * -> -> 10 `i `d / -> -> 16000000 `l `d .4000.0 `ul ]
+"33
+[; ;mcu.c: 33:     ISR_Initialize();
 [e ( _ISR_Initialize ..  ]
-"32
-[; ;mcu.c: 32: }
+"34
+[; ;mcu.c: 34: }
 [e :UE 829 ]
 }
-"42
-[; ;mcu.c: 42: void SYSTEM_Process(void){
+"44
+[; ;mcu.c: 44: void SYSTEM_Process(void){
 [v _SYSTEM_Process `(v ~T0 @X0 1 ef ]
 {
 [e :U _SYSTEM_Process ]
 [f ]
-"43
-[; ;mcu.c: 43:     if(TMR0_OVR_FLAG == 1){
+"45
+[; ;mcu.c: 45:     if(TMR0_OVR_FLAG == 1){
 [e $ ! == -> _TMR0_OVR_FLAG `i -> 1 `i 831  ]
 {
-"44
-[; ;mcu.c: 44:         tmr0_counterMs++;
+"46
+[; ;mcu.c: 46:         tmr0_counterMs++;
 [e ++ _tmr0_counterMs -> -> 1 `i `uc ]
-"45
-[; ;mcu.c: 45:         if(tmr0_counterMs>99){
+"47
+[; ;mcu.c: 47:         if(tmr0_counterMs>99){
 [e $ ! > -> _tmr0_counterMs `i -> 99 `i 832  ]
 {
-"46
-[; ;mcu.c: 46:             tmr0_counterMs = 0;
-[e = _tmr0_counterMs -> -> 0 `i `uc ]
-"47
-[; ;mcu.c: 47:             dotsCounter++;
-[e ++ _dotsCounter -> -> 1 `i `uc ]
 "48
-[; ;mcu.c: 48:             if(dotsCounter>5){
-[e $ ! > -> _dotsCounter `i -> 5 `i 833  ]
-{
+[; ;mcu.c: 48:             tmr0_counterMs = 0;
+[e = _tmr0_counterMs -> -> 0 `i `uc ]
 "49
-[; ;mcu.c: 49:                 dotsCounter = 0;
-[e = _dotsCounter -> -> 0 `i `uc ]
+[; ;mcu.c: 49:             MCU_SetModeDisplay();
+[e ( _MCU_SetModeDisplay ..  ]
 "50
-[; ;mcu.c: 50:                 dotsEnable ^= 1;
-[e =^ _dotsEnable -> 1 `i ]
+[; ;mcu.c: 50:             MCU_SetOutDisplay();
+[e ( _MCU_SetOutDisplay ..  ]
 "51
-[; ;mcu.c: 51:             }
-}
-[e :U 833 ]
-"52
-[; ;mcu.c: 52:             DisplayTimeToLCD(Get_DS1307_RTC_Time());
-[e ( _DisplayTimeToLCD (1 ( _Get_DS1307_RTC_Time ..  ]
-"53
-[; ;mcu.c: 53:         }
+[; ;mcu.c: 51:         }
 }
 [e :U 832 ]
-"54
-[; ;mcu.c: 54:         TMR0_OVR_FLAG = 0;
+"52
+[; ;mcu.c: 52:         TMR0_OVR_FLAG = 0;
 [e = _TMR0_OVR_FLAG -> -> 0 `i `a ]
-"55
-[; ;mcu.c: 55:     }
+"53
+[; ;mcu.c: 53:     }
 }
 [e :U 831 ]
-"56
-[; ;mcu.c: 56: }
+"54
+[; ;mcu.c: 54: }
 [e :UE 830 ]
 }
-"66
-[; ;mcu.c: 66: void MCU_Initialize(void){
+"64
+[; ;mcu.c: 64: void MCU_Initialize(void){
 [v _MCU_Initialize `(v ~T0 @X0 1 ef ]
 {
 [e :U _MCU_Initialize ]
 [f ]
-"68
-[; ;mcu.c: 68:     ANSELA = 0;
+"66
+[; ;mcu.c: 66:     ANSELA = 0;
 [e = _ANSELA -> -> 0 `i `uc ]
-"69
-[; ;mcu.c: 69:     ANSELB = 0;
+"67
+[; ;mcu.c: 67:     ANSELB = 0;
 [e = _ANSELB -> -> 0 `i `uc ]
-"70
-[; ;mcu.c: 70:     ANSELC = 0;
+"68
+[; ;mcu.c: 68:     ANSELC = 0;
 [e = _ANSELC -> -> 0 `i `uc ]
-"73
-[; ;mcu.c: 73:     TRISA = 0x00;
+"71
+[; ;mcu.c: 71:     TRISA = 0x00;
 [e = _TRISA -> -> 0 `i `uc ]
-"74
-[; ;mcu.c: 74:     TRISB = 0x00;
+"72
+[; ;mcu.c: 72:     TRISB = 0x00;
 [e = _TRISB -> -> 0 `i `uc ]
-"75
-[; ;mcu.c: 75:     TRISC = 0x00;
+"73
+[; ;mcu.c: 73:     TRISC = 0x00;
 [e = _TRISC -> -> 0 `i `uc ]
-"78
-[; ;mcu.c: 78:     PORTA = 0x00;
+"76
+[; ;mcu.c: 76:     PORTA = 0x00;
 [e = _PORTA -> -> 0 `i `uc ]
-"79
-[; ;mcu.c: 79:     PORTB = 0x00;
+"77
+[; ;mcu.c: 77:     PORTB = 0x00;
 [e = _PORTB -> -> 0 `i `uc ]
-"80
-[; ;mcu.c: 80:     PORTC = 0x00;
+"78
+[; ;mcu.c: 78:     PORTC = 0x00;
 [e = _PORTC -> -> 0 `i `uc ]
-"82
-[; ;mcu.c: 82: }
-[e :UE 834 ]
+"80
+[; ;mcu.c: 80: }
+[e :UE 833 ]
 }
-"92
-[; ;mcu.c: 92: void OSCILLATOR_Initialize(void){
+"90
+[; ;mcu.c: 90: void OSCILLATOR_Initialize(void){
 [v _OSCILLATOR_Initialize `(v ~T0 @X0 1 ef ]
 {
 [e :U _OSCILLATOR_Initialize ]
 [f ]
-"94
-[; ;mcu.c: 94:     OSCCONbits.IRCF=0b111;
+"92
+[; ;mcu.c: 92:     OSCCONbits.IRCF=0b111;
 [e = . . _OSCCONbits 0 3 -> -> 7 `i `uc ]
-"95
-[; ;mcu.c: 95: }
-[e :UE 835 ]
+"93
+[; ;mcu.c: 93: }
+[e :UE 834 ]
 }
-"97
-[; ;mcu.c: 97: void TMR0_Initialize(void){
+"95
+[; ;mcu.c: 95: void TMR0_Initialize(void){
 [v _TMR0_Initialize `(v ~T0 @X0 1 ef ]
 {
 [e :U _TMR0_Initialize ]
 [f ]
-"99
-[; ;mcu.c: 99:     T0CONbits.TMR0ON = 1;
+"97
+[; ;mcu.c: 97:     T0CONbits.TMR0ON = 1;
 [e = . . _T0CONbits 0 5 -> -> 1 `i `uc ]
-"100
-[; ;mcu.c: 100:     T0CONbits.T08BIT = 0;
+"98
+[; ;mcu.c: 98:     T0CONbits.T08BIT = 0;
 [e = . . _T0CONbits 0 4 -> -> 0 `i `uc ]
-"101
-[; ;mcu.c: 101:     T0CONbits.T0CS = 0;
+"99
+[; ;mcu.c: 99:     T0CONbits.T0CS = 0;
 [e = . . _T0CONbits 0 3 -> -> 0 `i `uc ]
-"102
-[; ;mcu.c: 102:     T0CONbits.T0SE = 0;
+"100
+[; ;mcu.c: 100:     T0CONbits.T0SE = 0;
 [e = . . _T0CONbits 0 2 -> -> 0 `i `uc ]
-"103
-[; ;mcu.c: 103:     T0CONbits.PSA = 0;
+"101
+[; ;mcu.c: 101:     T0CONbits.PSA = 0;
 [e = . . _T0CONbits 0 1 -> -> 0 `i `uc ]
-"104
-[; ;mcu.c: 104:     T0CONbits.T0PS = 0b000;
+"102
+[; ;mcu.c: 102:     T0CONbits.T0PS = 0b000;
 [e = . . _T0CONbits 0 0 -> -> 0 `i `uc ]
-"107
-[; ;mcu.c: 107:     ((void)(TMR0H=((0xF830)>>8),TMR0L=((0xF830)&0xFF)));
+"105
+[; ;mcu.c: 105:     ((void)(TMR0H=((0xF830)>>8),TMR0L=((0xF830)&0xFF)));
 [e ; = _TMR0H -> >> -> 63536 `ui -> 8 `i `uc = _TMR0L -> & -> 63536 `ui -> -> 255 `i `ui `uc ]
-"108
-[; ;mcu.c: 108:     INTCONbits.TMR0IF = 0;
+"106
+[; ;mcu.c: 106:     INTCONbits.TMR0IF = 0;
 [e = . . _INTCONbits 0 2 -> -> 0 `i `uc ]
-"109
-[; ;mcu.c: 109:     INTCONbits.TMR0IE = 1;
+"107
+[; ;mcu.c: 107:     INTCONbits.TMR0IE = 1;
 [e = . . _INTCONbits 0 5 -> -> 1 `i `uc ]
-"110
-[; ;mcu.c: 110:     INTCON2bits.TMR0IP = 1;
+"108
+[; ;mcu.c: 108:     INTCON2bits.TMR0IP = 1;
 [e = . . _INTCON2bits 1 2 -> -> 1 `i `uc ]
-"111
-[; ;mcu.c: 111: }
-[e :UE 836 ]
+"109
+[; ;mcu.c: 109: }
+[e :UE 835 ]
 }
-"113
-[; ;mcu.c: 113: void RTC_Initialize(void){
+"111
+[; ;mcu.c: 111: void RTC_Initialize(void){
 [v _RTC_Initialize `(v ~T0 @X0 1 ef ]
 {
 [e :U _RTC_Initialize ]
 [f ]
+"113
+[; ;mcu.c: 113:  Set_DS1307_RTC_Time(0, 12, 12, 0);
+[e ( _Set_DS1307_RTC_Time (4 , , , -> -> 0 `i `uc -> -> 12 `i `uc -> -> 12 `i `uc -> -> 0 `i `uc ]
 "115
-[; ;mcu.c: 115:  Set_DS1307_RTC_Time(1, 5, 7, 0);
-[e ( _Set_DS1307_RTC_Time (4 , , , -> -> 1 `i `uc -> -> 5 `i `uc -> -> 7 `i `uc -> -> 0 `i `uc ]
-"117
-[; ;mcu.c: 117:  Set_DS1307_RTC_Date(4, 8, 23, 5);
-[e ( _Set_DS1307_RTC_Date (4 , , , -> -> 4 `i `uc -> -> 8 `i `uc -> -> 23 `i `uc -> -> 5 `i `uc ]
+[; ;mcu.c: 115:  Set_DS1307_RTC_Date(20, 8, 23, 7);
+[e ( _Set_DS1307_RTC_Date (4 , , , -> -> 20 `i `uc -> -> 8 `i `uc -> -> 23 `i `uc -> -> 7 `i `uc ]
+"116
+[; ;mcu.c: 116: }
+[e :UE 836 ]
+}
 "118
-[; ;mcu.c: 118: }
+[; ;mcu.c: 118: void MCU_SetModeDisplay(void){
+[v _MCU_SetModeDisplay `(v ~T0 @X0 1 ef ]
+{
+[e :U _MCU_SetModeDisplay ]
+[f ]
+"119
+[; ;mcu.c: 119:     mSeconds++;
+[e ++ _mSeconds -> -> 1 `i `uc ]
+"120
+[; ;mcu.c: 120:     if(mSeconds>9){
+[e $ ! > -> _mSeconds `i -> 9 `i 838  ]
+{
+"121
+[; ;mcu.c: 121:         mSeconds = 0;
+[e = _mSeconds -> -> 0 `i `uc ]
+"122
+[; ;mcu.c: 122:         Seconds ++;
+[e ++ _Seconds -> -> 1 `i `uc ]
+"123
+[; ;mcu.c: 123:         if(Seconds >59)
+[e $ ! > -> _Seconds `i -> 59 `i 839  ]
+"124
+[; ;mcu.c: 124:             Seconds = 0;
+[e = _Seconds -> -> 0 `i `uc ]
+[e :U 839 ]
+"125
+[; ;mcu.c: 125:         switch(Seconds){
+[e $U 841  ]
+{
+"126
+[; ;mcu.c: 126:             case 0:
+[e :U 842 ]
+"127
+[; ;mcu.c: 127:                 displayMode = showTime;
+[e = _displayMode -> . `E6654 0 `uc ]
+"128
+[; ;mcu.c: 128:                 break;
+[e $U 840  ]
+"129
+[; ;mcu.c: 129:             case 49:
+[e :U 843 ]
+"130
+[; ;mcu.c: 130:                 displayMode = showDate;
+[e = _displayMode -> . `E6654 1 `uc ]
+"131
+[; ;mcu.c: 131:                 break;
+[e $U 840  ]
+"132
+[; ;mcu.c: 132:             default:
+[e :U 844 ]
+"133
+[; ;mcu.c: 133:                 break;
+[e $U 840  ]
+"134
+[; ;mcu.c: 134:         }
+}
+[e $U 840  ]
+[e :U 841 ]
+[e [\ -> _Seconds `i , $ -> 0 `i 842
+ , $ -> 49 `i 843
+ 844 ]
+[e :U 840 ]
+"135
+[; ;mcu.c: 135:     }
+}
+[e :U 838 ]
+"136
+[; ;mcu.c: 136: }
 [e :UE 837 ]
 }
-"120
-[; ;mcu.c: 120: void DisplayTimeToLCD(unsigned char* pTimeArray){
-[v _DisplayTimeToLCD `(v ~T0 @X0 1 ef1`*uc ]
+"138
+[; ;mcu.c: 138: void MCU_SetOutDisplay(void){
+[v _MCU_SetOutDisplay `(v ~T0 @X0 1 ef ]
 {
-[e :U _DisplayTimeToLCD ]
+[e :U _MCU_SetOutDisplay ]
+[f ]
+"139
+[; ;mcu.c: 139:     switch (displayMode){
+[e $U 847  ]
+{
+"140
+[; ;mcu.c: 140:         case showTime:
+[e :U 848 ]
+"141
+[; ;mcu.c: 141:             dotsCounter++;
+[e ++ _dotsCounter -> -> 1 `i `uc ]
+"142
+[; ;mcu.c: 142:             if(dotsCounter>9){
+[e $ ! > -> _dotsCounter `i -> 9 `i 849  ]
+{
+"143
+[; ;mcu.c: 143:                 dotsCounter = 0;
+[e = _dotsCounter -> -> 0 `i `uc ]
+"144
+[; ;mcu.c: 144:                 dotsEnable ^= 1;
+[e =^ _dotsEnable -> 1 `i ]
+"145
+[; ;mcu.c: 145:             }
+}
+[e :U 849 ]
+"146
+[; ;mcu.c: 146:             UpdateTimeToDisplay(Get_DS1307_RTC_Time());
+[e ( _UpdateTimeToDisplay (1 ( _Get_DS1307_RTC_Time ..  ]
+"147
+[; ;mcu.c: 147:             break;
+[e $U 846  ]
+"148
+[; ;mcu.c: 148:         case showDate:
+[e :U 850 ]
+"149
+[; ;mcu.c: 149:             UpdateDateToDisplay(Get_DS1307_RTC_Date());
+[e ( _UpdateDateToDisplay (1 ( _Get_DS1307_RTC_Date ..  ]
+"150
+[; ;mcu.c: 150:             break;
+[e $U 846  ]
+"151
+[; ;mcu.c: 151:         default:
+[e :U 851 ]
+"152
+[; ;mcu.c: 152:             break;
+[e $U 846  ]
+"153
+[; ;mcu.c: 153:     }
+}
+[e $U 846  ]
+[e :U 847 ]
+[e [\ -> _displayMode `i , $ . `E6654 0 848
+ , $ . `E6654 1 850
+ 851 ]
+[e :U 846 ]
+"154
+[; ;mcu.c: 154: }
+[e :UE 845 ]
+}
+"156
+[; ;mcu.c: 156: void UpdateTimeToDisplay(unsigned char* pTimeArray){
+[v _UpdateTimeToDisplay `(v ~T0 @X0 1 ef1`*uc ]
+{
+[e :U _UpdateTimeToDisplay ]
 [v _pTimeArray `*uc ~T0 @X0 1 r1 ]
 [f ]
-"122
-[; ;mcu.c: 122:     timeToDisplay[0] = (pTimeArray[2]/10);
+"158
+[; ;mcu.c: 158:     timeToDisplay[0] = pTimeArray[2]/10;
 [e = *U + &U _timeToDisplay * -> -> -> 0 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux -> / -> *U + _pTimeArray * -> -> 2 `i `x -> -> # *U _pTimeArray `i `x `i -> 10 `i `uc ]
-"123
-[; ;mcu.c: 123:     timeToDisplay[1] = (pTimeArray[2]%10);
+"159
+[; ;mcu.c: 159:     timeToDisplay[1] = pTimeArray[2]%10;
 [e = *U + &U _timeToDisplay * -> -> -> 1 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux -> % -> *U + _pTimeArray * -> -> 2 `i `x -> -> # *U _pTimeArray `i `x `i -> 10 `i `uc ]
-"125
-[; ;mcu.c: 125:     timeToDisplay[2] = (pTimeArray[1]/10);
+"161
+[; ;mcu.c: 161:     timeToDisplay[2] = pTimeArray[1]/10;
 [e = *U + &U _timeToDisplay * -> -> -> 2 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux -> / -> *U + _pTimeArray * -> -> 1 `i `x -> -> # *U _pTimeArray `i `x `i -> 10 `i `uc ]
-"126
-[; ;mcu.c: 126:     timeToDisplay[3] = (pTimeArray[1]%10);
+"162
+[; ;mcu.c: 162:     timeToDisplay[3] = pTimeArray[1]%10;
 [e = *U + &U _timeToDisplay * -> -> -> 3 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux -> % -> *U + _pTimeArray * -> -> 1 `i `x -> -> # *U _pTimeArray `i `x `i -> 10 `i `uc ]
-"128
-[; ;mcu.c: 128:     timeToDisplay[4] = (pTimeArray[0]/10);
+"164
+[; ;mcu.c: 164:     timeToDisplay[4] = pTimeArray[0]/10;
 [e = *U + &U _timeToDisplay * -> -> -> 4 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux -> / -> *U + _pTimeArray * -> -> 0 `i `x -> -> # *U _pTimeArray `i `x `i -> 10 `i `uc ]
-"129
-[; ;mcu.c: 129:     timeToDisplay[5] = (pTimeArray[0]%10);
+"165
+[; ;mcu.c: 165:     timeToDisplay[5] = pTimeArray[0]%10;
 [e = *U + &U _timeToDisplay * -> -> -> 5 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux -> % -> *U + _pTimeArray * -> -> 0 `i `x -> -> # *U _pTimeArray `i `x `i -> 10 `i `uc ]
-"137
-[; ;mcu.c: 137:    DISPLAY_Set(timeToDisplay[0], timeToDisplay[1], timeToDisplay[2], timeToDisplay[3]);
-[e ( _DISPLAY_Set (4 , , , *U + &U _timeToDisplay * -> -> -> 0 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux *U + &U _timeToDisplay * -> -> -> 1 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux *U + &U _timeToDisplay * -> -> -> 2 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux *U + &U _timeToDisplay * -> -> -> 3 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux ]
-"138
-[; ;mcu.c: 138: }
-[e :UE 838 ]
+"172
+[; ;mcu.c: 172:    DISPLAY_Set(timeToDisplay[0], timeToDisplay[1], timeToDisplay[2], timeToDisplay[3], timeToDisplay[4], timeToDisplay[5]);
+[e ( _DISPLAY_Set (4 , , , , , *U + &U _timeToDisplay * -> -> -> 0 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux *U + &U _timeToDisplay * -> -> -> 1 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux *U + &U _timeToDisplay * -> -> -> 2 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux *U + &U _timeToDisplay * -> -> -> 3 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux *U + &U _timeToDisplay * -> -> -> 4 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux *U + &U _timeToDisplay * -> -> -> 5 `i `ui `ux -> -> # *U &U _timeToDisplay `ui `ux ]
+"173
+[; ;mcu.c: 173: }
+[e :UE 852 ]
 }
-"140
-[; ;mcu.c: 140: void DisplayDateOnLCD( unsigned char* pDateArray ){
-[v _DisplayDateOnLCD `(v ~T0 @X0 1 ef1`*uc ]
+"175
+[; ;mcu.c: 175: void UpdateDateToDisplay( unsigned char* pDateArray ){
+[v _UpdateDateToDisplay `(v ~T0 @X0 1 ef1`*uc ]
 {
-[e :U _DisplayDateOnLCD ]
+[e :U _UpdateDateToDisplay ]
 [v _pDateArray `*uc ~T0 @X0 1 r1 ]
 [f ]
-"164
-[; ;mcu.c: 164: }
-[e :UE 839 ]
+"177
+[; ;mcu.c: 177:     dateToDisplay[0] = pDateArray[1]/10;
+[e = *U + &U _dateToDisplay * -> -> -> 0 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux -> / -> *U + _pDateArray * -> -> 1 `i `x -> -> # *U _pDateArray `i `x `i -> 10 `i `uc ]
+"178
+[; ;mcu.c: 178:     dateToDisplay[1] = pDateArray[1]%10;
+[e = *U + &U _dateToDisplay * -> -> -> 1 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux -> % -> *U + _pDateArray * -> -> 1 `i `x -> -> # *U _pDateArray `i `x `i -> 10 `i `uc ]
+"180
+[; ;mcu.c: 180:     dateToDisplay[2] = pDateArray[2]/10;
+[e = *U + &U _dateToDisplay * -> -> -> 2 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux -> / -> *U + _pDateArray * -> -> 2 `i `x -> -> # *U _pDateArray `i `x `i -> 10 `i `uc ]
+"181
+[; ;mcu.c: 181:     dateToDisplay[3] = pDateArray[2]%10;
+[e = *U + &U _dateToDisplay * -> -> -> 3 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux -> % -> *U + _pDateArray * -> -> 2 `i `x -> -> # *U _pDateArray `i `x `i -> 10 `i `uc ]
+"183
+[; ;mcu.c: 183:     dateToDisplay[4] = pDateArray[3]/10;
+[e = *U + &U _dateToDisplay * -> -> -> 4 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux -> / -> *U + _pDateArray * -> -> 3 `i `x -> -> # *U _pDateArray `i `x `i -> 10 `i `uc ]
+"184
+[; ;mcu.c: 184:     dateToDisplay[5] = pDateArray[3]%10;
+[e = *U + &U _dateToDisplay * -> -> -> 5 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux -> % -> *U + _pDateArray * -> -> 3 `i `x -> -> # *U _pDateArray `i `x `i -> 10 `i `uc ]
+"196
+[; ;mcu.c: 196:     DISPLAY_Set(dateToDisplay[0], dateToDisplay[1], dateToDisplay[2], dateToDisplay[3], dateToDisplay[4], dateToDisplay[5]);
+[e ( _DISPLAY_Set (4 , , , , , *U + &U _dateToDisplay * -> -> -> 0 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux *U + &U _dateToDisplay * -> -> -> 1 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux *U + &U _dateToDisplay * -> -> -> 2 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux *U + &U _dateToDisplay * -> -> -> 3 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux *U + &U _dateToDisplay * -> -> -> 4 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux *U + &U _dateToDisplay * -> -> -> 5 `i `ui `ux -> -> # *U &U _dateToDisplay `ui `ux ]
+"197
+[; ;mcu.c: 197: }
+[e :UE 853 ]
 }

@@ -19,48 +19,52 @@
 
 
 /*******************************************************************************
- * Function:        void DISPLAY_Set(uint8_t D1, uint8_t D2)
+ * Function:        void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4, uint8_t D3, uint8_t D4)
  * Description:     Carga los valores al array que controla todo el modulo de displays, 
- *                  esta pensado para un maximo de 2 digitos.
+ *                  esta pensado para un maximo de 6 digitos.
  * Precondition:    Asiganar el valor correcto a la variable NUMBERS_OF_DISPLAYS en Display7seg_74HC595.h
  * Parameters:      Los parametros recibidos son el valor independiente de cada digito,
  *                  el orden de estos es de izquierda a derecha.
- *                  D1 | D2
+ *                  D1 | D2 | D3 | D4 | D5 | D6
  * Return Values:   None
  * Remarks:         Ejemplo de uso, si quieres mostrar 5E en los displays
- *                  Tenemos que NUMBERS_OF_DISPLAYS = 3
- *                  Entonces debes DISPLAY_set(5, DIG_E);
- *                  o bien puedes usar DISPLAY_set(5, 14); ya que en el array de digitos 14 esla letra E
+ *                  Tenemos que NUMBERS_OF_DISPLAYS = 6
+ *                  Entonces debes DISPLAY_set(1,2,3,4,5,6);
  ******************************************************************************/
-void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4){
-    switch(NUMBERS_OF_DISPLAYS){
-        case 1:
-            display_values[1]=digits[DIG_OFF];
-            display_values[0]=digits[D1];
-            break;
-        case 2:
-            display_values[1]=digits[D1];
-            display_values[0]=digits[D2];
-            break;
-        case 3:
-            break;
-        case 4:
+void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4, uint8_t D5, uint8_t D6){
+    
+    switch (displayMode){
+        case showTime:
             if(dotsEnable){
-                display_values[3] = digits[D1];
-                display_values[2] = (digits[D2])&((uint8_t)~SEG_P);
-                display_values[1] = (digits[D3])&((uint8_t)~SEG_P);
-                display_values[0] = digits[D4]; 
+                display_values[5] = digits[D1];
+                display_values[4] = (digits[D2])&((uint8_t)~SEG_P);
+                display_values[3] = (~digits[D3])|((uint8_t)SEG_P); //cathode display
+                display_values[2] = (~digits[D4])|((uint8_t)SEG_P); //cathode display
+                display_values[1] = (digits[D5])&((uint8_t)~SEG_P);
+                display_values[0] = digits[D6];
             }
             else{
-                display_values[3] = digits[D1];
-                display_values[2] = digits[D2];
-                display_values[1] = digits[D3];
-                display_values[0] = digits[D4];
+                display_values[5] = digits[D1];
+                display_values[4] = digits[D2];
+                display_values[3] = ~digits[D3];    //cathode display
+                display_values[2] = ~digits[D4];    //cathode display
+                display_values[1] = digits[D5];
+                display_values[0] = digits[D6];
             }
+            break;
+        case showDate:
+            display_values[5] = digits[D1];
+            display_values[4] = (digits[D2])&((uint8_t)~SEG_P);
+            display_values[3] = ~digits[D3];                    //cathode display
+            display_values[2] = (~digits[D4])|((uint8_t)SEG_P); //cathode display
+            display_values[1] = digits[D5];
+            display_values[0] = digits[D6];
             break;
         default:
             break;
     }
+    
+    
     DISPLAY_Update();
 }
 
@@ -73,7 +77,7 @@ void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4){
  * Remarks:         
  ******************************************************************************/
 void DISPLAY_Reset(void){
-    DISPLAY_Set(DIG_OFF, DIG_OFF, DIG_OFF, DIG_OFF); 
+    DISPLAY_Set(DIG_OFF, DIG_OFF, DIG_OFF, DIG_OFF, DIG_OFF, DIG_OFF); 
 }
  
 /*******************************************************************************
@@ -89,6 +93,8 @@ void DISPLAY_Write(uint16_t num){
     uint8_t digit2=DIG_OFF;
     uint8_t digit3=DIG_OFF;
     uint8_t digit4=DIG_OFF;
+    uint8_t digit5=DIG_OFF;
+    uint8_t digit6=DIG_OFF;
     
     if (num<10){
         digit4 = (uint8_t)(num);
@@ -108,7 +114,7 @@ void DISPLAY_Write(uint16_t num){
         digit2 = (uint8_t)((num%1000)/100);
         digit1 = (uint8_t)(num/1000);
     }
-  DISPLAY_Set(digit1, digit2, digit3, digit4);
+  DISPLAY_Set(digit1, digit2, digit3, digit4, digit5, digit6);
   }
 
 /*******************************************************************************

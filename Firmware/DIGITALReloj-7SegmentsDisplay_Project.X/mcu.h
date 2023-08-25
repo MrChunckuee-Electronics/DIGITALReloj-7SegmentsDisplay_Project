@@ -15,6 +15,10 @@ extern "C" {
 
 #include <xc.h>
     
+uint8_t displayMode = 0;
+
+enum {showTime = 0, showDate};
+    
 /*********** P R O T O T Y P E S **********************************************/
 void SYSTEM_Initialize(void);
 void SYSTEM_Process(void);
@@ -24,8 +28,11 @@ void IO_LEDPrintChar(uint8_t LEDCHAR);
 void IO_LEDHello(void);
 void TMR0_Initialize(void);
 void RTC_Initialize(void);
-void DisplayDateOnLCD(unsigned char* pDateArray);
-void DisplayTimeToLCD(unsigned char* pTimeArray);
+
+void MCU_SetModeDisplay(void);
+void MCU_SetOutDisplay(void);
+void UpdateDateToDisplay(unsigned char* pDateArray);
+void UpdateTimeToDisplay(unsigned char* pTimeArray);
 
 
 

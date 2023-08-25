@@ -1,4 +1,8 @@
 Version 4.0 HI-TECH Software Intermediate Code
+"65 Display7seg_74HC595.c
+[; ;Display7seg_74HC595.c: 65:     }
+[c E6654 0 1 .. ]
+[n E6654 . showTime showDate  ]
 "84 ./Display7seg_74HC595.h
 [; ;./Display7seg_74HC595.h: 84: void DISPLAY_Update(void);
 [v _DISPLAY_Update `(v ~T0 @X0 0 ef ]
@@ -752,11 +756,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 "16576
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC18F-K_DFP/1.5.114/xc8\pic\include\proc\pic18f25k22.h: 16576: __asm("TOSU equ 0FFFh");
 [; <" TOSU equ 0FFFh ;# ">
+"18 ./mcu.h
+[; ;./mcu.h: 18: uint8_t displayMode = 0;
+[v _displayMode `uc ~T0 @X0 1 e ]
+[i _displayMode
+-> -> 0 `i `uc
+]
 "16 ./Display7seg_74HC595.h
-[; ;./Display7seg_74HC595.h: 16: uint8_t NUMBERS_OF_DISPLAYS = 4;
+[; ;./Display7seg_74HC595.h: 16: uint8_t NUMBERS_OF_DISPLAYS = 6;
 [v _NUMBERS_OF_DISPLAYS `uc ~T0 @X0 1 e ]
 [i _NUMBERS_OF_DISPLAYS
--> -> 4 `i `uc
+-> -> 6 `i `uc
 ]
 "17
 [; ;./Display7seg_74HC595.h: 17: _Bool dotsEnable = 0;
@@ -789,383 +799,397 @@ Version 4.0 HI-TECH Software Intermediate Code
 ..
 ]
 "78
-[; ;./Display7seg_74HC595.h: 78: uint8_t display_values[6];
-[v _display_values `uc ~T0 @X0 -> 6 `i e ]
+[; ;./Display7seg_74HC595.h: 78: uint8_t display_values[7];
+[v _display_values `uc ~T0 @X0 -> 7 `i e ]
 "15 ./isr_manager.h
 [; ;./isr_manager.h: 15: _Bool TMR0_OVR_FLAG = 0;
 [v _TMR0_OVR_FLAG `a ~T0 @X0 1 e ]
 [i _TMR0_OVR_FLAG
 -> -> 0 `i `a
 ]
-"35 Display7seg_74HC595.c
-[; ;Display7seg_74HC595.c: 35: void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4){
-[v _DISPLAY_Set `(v ~T0 @X0 1 ef4`uc`uc`uc`uc ]
+"34 Display7seg_74HC595.c
+[; ;Display7seg_74HC595.c: 34: void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4, uint8_t D5, uint8_t D6){
+[v _DISPLAY_Set `(v ~T0 @X0 1 ef6`uc`uc`uc`uc`uc`uc ]
 {
 [e :U _DISPLAY_Set ]
 [v _D1 `uc ~T0 @X0 1 r1 ]
 [v _D2 `uc ~T0 @X0 1 r2 ]
 [v _D3 `uc ~T0 @X0 1 r3 ]
 [v _D4 `uc ~T0 @X0 1 r4 ]
+[v _D5 `uc ~T0 @X0 1 r5 ]
+[v _D6 `uc ~T0 @X0 1 r6 ]
 [f ]
 "36
-[; ;Display7seg_74HC595.c: 36:     switch(NUMBERS_OF_DISPLAYS){
+[; ;Display7seg_74HC595.c: 36:     switch (displayMode){
 [e $U 831  ]
 {
 "37
-[; ;Display7seg_74HC595.c: 37:         case 1:
+[; ;Display7seg_74HC595.c: 37:         case showTime:
 [e :U 832 ]
 "38
-[; ;Display7seg_74HC595.c: 38:             display_values[1]=digits[16];
-[e = *U + &U _display_values * -> -> -> 1 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> -> -> 16 `i `ui `ux -> -> # *U &U _digits `ui `ux ]
-"39
-[; ;Display7seg_74HC595.c: 39:             display_values[0]=digits[D1];
-[e = *U + &U _display_values * -> -> -> 0 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D1 `ux -> -> # *U &U _digits `ui `ux ]
-"40
-[; ;Display7seg_74HC595.c: 40:             break;
-[e $U 830  ]
-"41
-[; ;Display7seg_74HC595.c: 41:         case 2:
-[e :U 833 ]
-"42
-[; ;Display7seg_74HC595.c: 42:             display_values[1]=digits[D1];
-[e = *U + &U _display_values * -> -> -> 1 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D1 `ux -> -> # *U &U _digits `ui `ux ]
-"43
-[; ;Display7seg_74HC595.c: 43:             display_values[0]=digits[D2];
-[e = *U + &U _display_values * -> -> -> 0 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D2 `ux -> -> # *U &U _digits `ui `ux ]
-"44
-[; ;Display7seg_74HC595.c: 44:             break;
-[e $U 830  ]
-"45
-[; ;Display7seg_74HC595.c: 45:         case 3:
-[e :U 834 ]
-"46
-[; ;Display7seg_74HC595.c: 46:             break;
-[e $U 830  ]
-"47
-[; ;Display7seg_74HC595.c: 47:         case 4:
-[e :U 835 ]
-"48
-[; ;Display7seg_74HC595.c: 48:             if(dotsEnable){
-[e $ ! != -> _dotsEnable `i -> 0 `i 836  ]
+[; ;Display7seg_74HC595.c: 38:             if(dotsEnable){
+[e $ ! != -> _dotsEnable `i -> 0 `i 833  ]
 {
+"39
+[; ;Display7seg_74HC595.c: 39:                 display_values[5] = digits[D1];
+[e = *U + &U _display_values * -> -> -> 5 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D1 `ux -> -> # *U &U _digits `ui `ux ]
+"40
+[; ;Display7seg_74HC595.c: 40:                 display_values[4] = (digits[D2])&((uint8_t)~0b00100000);
+[e = *U + &U _display_values * -> -> -> 4 `i `ui `ux -> -> # *U &U _display_values `ui `ux -> & -> *U + &U _digits * -> _D2 `ux -> -> # *U &U _digits `ui `ux `i -> -> ~ -> 32 `i `uc `i `uc ]
+"41
+[; ;Display7seg_74HC595.c: 41:                 display_values[3] = (~digits[D3])|((uint8_t)0b00100000);
+[e = *U + &U _display_values * -> -> -> 3 `i `ui `ux -> -> # *U &U _display_values `ui `ux -> | ~ -> *U + &U _digits * -> _D3 `ux -> -> # *U &U _digits `ui `ux `i -> -> -> 32 `i `uc `i `uc ]
+"42
+[; ;Display7seg_74HC595.c: 42:                 display_values[2] = (~digits[D4])|((uint8_t)0b00100000);
+[e = *U + &U _display_values * -> -> -> 2 `i `ui `ux -> -> # *U &U _display_values `ui `ux -> | ~ -> *U + &U _digits * -> _D4 `ux -> -> # *U &U _digits `ui `ux `i -> -> -> 32 `i `uc `i `uc ]
+"43
+[; ;Display7seg_74HC595.c: 43:                 display_values[1] = (digits[D5])&((uint8_t)~0b00100000);
+[e = *U + &U _display_values * -> -> -> 1 `i `ui `ux -> -> # *U &U _display_values `ui `ux -> & -> *U + &U _digits * -> _D5 `ux -> -> # *U &U _digits `ui `ux `i -> -> ~ -> 32 `i `uc `i `uc ]
+"44
+[; ;Display7seg_74HC595.c: 44:                 display_values[0] = digits[D6];
+[e = *U + &U _display_values * -> -> -> 0 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D6 `ux -> -> # *U &U _digits `ui `ux ]
+"45
+[; ;Display7seg_74HC595.c: 45:             }
+}
+[e $U 834  ]
+"46
+[; ;Display7seg_74HC595.c: 46:             else{
+[e :U 833 ]
+{
+"47
+[; ;Display7seg_74HC595.c: 47:                 display_values[5] = digits[D1];
+[e = *U + &U _display_values * -> -> -> 5 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D1 `ux -> -> # *U &U _digits `ui `ux ]
+"48
+[; ;Display7seg_74HC595.c: 48:                 display_values[4] = digits[D2];
+[e = *U + &U _display_values * -> -> -> 4 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D2 `ux -> -> # *U &U _digits `ui `ux ]
 "49
-[; ;Display7seg_74HC595.c: 49:                 display_values[3] = digits[D1];
-[e = *U + &U _display_values * -> -> -> 3 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D1 `ux -> -> # *U &U _digits `ui `ux ]
+[; ;Display7seg_74HC595.c: 49:                 display_values[3] = ~digits[D3];
+[e = *U + &U _display_values * -> -> -> 3 `i `ui `ux -> -> # *U &U _display_values `ui `ux -> ~ -> *U + &U _digits * -> _D3 `ux -> -> # *U &U _digits `ui `ux `i `uc ]
 "50
-[; ;Display7seg_74HC595.c: 50:                 display_values[2] = (digits[D2])&((uint8_t)~0b00100000);
-[e = *U + &U _display_values * -> -> -> 2 `i `ui `ux -> -> # *U &U _display_values `ui `ux -> & -> *U + &U _digits * -> _D2 `ux -> -> # *U &U _digits `ui `ux `i -> -> ~ -> 32 `i `uc `i `uc ]
+[; ;Display7seg_74HC595.c: 50:                 display_values[2] = ~digits[D4];
+[e = *U + &U _display_values * -> -> -> 2 `i `ui `ux -> -> # *U &U _display_values `ui `ux -> ~ -> *U + &U _digits * -> _D4 `ux -> -> # *U &U _digits `ui `ux `i `uc ]
 "51
-[; ;Display7seg_74HC595.c: 51:                 display_values[1] = (digits[D3])&((uint8_t)~0b00100000);
-[e = *U + &U _display_values * -> -> -> 1 `i `ui `ux -> -> # *U &U _display_values `ui `ux -> & -> *U + &U _digits * -> _D3 `ux -> -> # *U &U _digits `ui `ux `i -> -> ~ -> 32 `i `uc `i `uc ]
+[; ;Display7seg_74HC595.c: 51:                 display_values[1] = digits[D5];
+[e = *U + &U _display_values * -> -> -> 1 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D5 `ux -> -> # *U &U _digits `ui `ux ]
 "52
-[; ;Display7seg_74HC595.c: 52:                 display_values[0] = digits[D4];
-[e = *U + &U _display_values * -> -> -> 0 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D4 `ux -> -> # *U &U _digits `ui `ux ]
+[; ;Display7seg_74HC595.c: 52:                 display_values[0] = digits[D6];
+[e = *U + &U _display_values * -> -> -> 0 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D6 `ux -> -> # *U &U _digits `ui `ux ]
 "53
 [; ;Display7seg_74HC595.c: 53:             }
 }
-[e $U 837  ]
+[e :U 834 ]
 "54
-[; ;Display7seg_74HC595.c: 54:             else{
-[e :U 836 ]
-{
-"55
-[; ;Display7seg_74HC595.c: 55:                 display_values[3] = digits[D1];
-[e = *U + &U _display_values * -> -> -> 3 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D1 `ux -> -> # *U &U _digits `ui `ux ]
-"56
-[; ;Display7seg_74HC595.c: 56:                 display_values[2] = digits[D2];
-[e = *U + &U _display_values * -> -> -> 2 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D2 `ux -> -> # *U &U _digits `ui `ux ]
-"57
-[; ;Display7seg_74HC595.c: 57:                 display_values[1] = digits[D3];
-[e = *U + &U _display_values * -> -> -> 1 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D3 `ux -> -> # *U &U _digits `ui `ux ]
-"58
-[; ;Display7seg_74HC595.c: 58:                 display_values[0] = digits[D4];
-[e = *U + &U _display_values * -> -> -> 0 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D4 `ux -> -> # *U &U _digits `ui `ux ]
-"59
-[; ;Display7seg_74HC595.c: 59:             }
-}
-[e :U 837 ]
-"60
-[; ;Display7seg_74HC595.c: 60:             break;
+[; ;Display7seg_74HC595.c: 54:             break;
 [e $U 830  ]
+"55
+[; ;Display7seg_74HC595.c: 55:         case showDate:
+[e :U 835 ]
+"56
+[; ;Display7seg_74HC595.c: 56:             display_values[5] = digits[D1];
+[e = *U + &U _display_values * -> -> -> 5 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D1 `ux -> -> # *U &U _digits `ui `ux ]
+"57
+[; ;Display7seg_74HC595.c: 57:             display_values[4] = (digits[D2])&((uint8_t)~0b00100000);
+[e = *U + &U _display_values * -> -> -> 4 `i `ui `ux -> -> # *U &U _display_values `ui `ux -> & -> *U + &U _digits * -> _D2 `ux -> -> # *U &U _digits `ui `ux `i -> -> ~ -> 32 `i `uc `i `uc ]
+"58
+[; ;Display7seg_74HC595.c: 58:             display_values[3] = ~digits[D3];
+[e = *U + &U _display_values * -> -> -> 3 `i `ui `ux -> -> # *U &U _display_values `ui `ux -> ~ -> *U + &U _digits * -> _D3 `ux -> -> # *U &U _digits `ui `ux `i `uc ]
+"59
+[; ;Display7seg_74HC595.c: 59:             display_values[2] = (~digits[D4])|((uint8_t)0b00100000);
+[e = *U + &U _display_values * -> -> -> 2 `i `ui `ux -> -> # *U &U _display_values `ui `ux -> | ~ -> *U + &U _digits * -> _D4 `ux -> -> # *U &U _digits `ui `ux `i -> -> -> 32 `i `uc `i `uc ]
+"60
+[; ;Display7seg_74HC595.c: 60:             display_values[1] = digits[D5];
+[e = *U + &U _display_values * -> -> -> 1 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D5 `ux -> -> # *U &U _digits `ui `ux ]
 "61
-[; ;Display7seg_74HC595.c: 61:         default:
-[e :U 838 ]
+[; ;Display7seg_74HC595.c: 61:             display_values[0] = digits[D6];
+[e = *U + &U _display_values * -> -> -> 0 `i `ui `ux -> -> # *U &U _display_values `ui `ux *U + &U _digits * -> _D6 `ux -> -> # *U &U _digits `ui `ux ]
 "62
 [; ;Display7seg_74HC595.c: 62:             break;
 [e $U 830  ]
 "63
-[; ;Display7seg_74HC595.c: 63:     }
+[; ;Display7seg_74HC595.c: 63:         default:
+[e :U 836 ]
+"64
+[; ;Display7seg_74HC595.c: 64:             break;
+[e $U 830  ]
+"65
+[; ;Display7seg_74HC595.c: 65:     }
 }
 [e $U 830  ]
 [e :U 831 ]
-[e [\ -> _NUMBERS_OF_DISPLAYS `i , $ -> 1 `i 832
- , $ -> 2 `i 833
- , $ -> 3 `i 834
- , $ -> 4 `i 835
- 838 ]
+[e [\ -> _displayMode `i , $ . `E6654 0 832
+ , $ . `E6654 1 835
+ 836 ]
 [e :U 830 ]
-"64
-[; ;Display7seg_74HC595.c: 64:     DISPLAY_Update();
+"68
+[; ;Display7seg_74HC595.c: 68:     DISPLAY_Update();
 [e ( _DISPLAY_Update ..  ]
-"65
-[; ;Display7seg_74HC595.c: 65: }
+"69
+[; ;Display7seg_74HC595.c: 69: }
 [e :UE 829 ]
 }
-"75
-[; ;Display7seg_74HC595.c: 75: void DISPLAY_Reset(void){
+"79
+[; ;Display7seg_74HC595.c: 79: void DISPLAY_Reset(void){
 [v _DISPLAY_Reset `(v ~T0 @X0 1 ef ]
 {
 [e :U _DISPLAY_Reset ]
 [f ]
-"76
-[; ;Display7seg_74HC595.c: 76:     DISPLAY_Set(16, 16, 16, 16);
-[e ( _DISPLAY_Set (4 , , , -> -> 16 `i `uc -> -> 16 `i `uc -> -> 16 `i `uc -> -> 16 `i `uc ]
-"77
-[; ;Display7seg_74HC595.c: 77: }
-[e :UE 839 ]
+"80
+[; ;Display7seg_74HC595.c: 80:     DISPLAY_Set(16, 16, 16, 16, 16, 16);
+[e ( _DISPLAY_Set (4 , , , , , -> -> 16 `i `uc -> -> 16 `i `uc -> -> 16 `i `uc -> -> 16 `i `uc -> -> 16 `i `uc -> -> 16 `i `uc ]
+"81
+[; ;Display7seg_74HC595.c: 81: }
+[e :UE 837 ]
 }
-"87
-[; ;Display7seg_74HC595.c: 87: void DISPLAY_Write(uint16_t num){
+"91
+[; ;Display7seg_74HC595.c: 91: void DISPLAY_Write(uint16_t num){
 [v _DISPLAY_Write `(v ~T0 @X0 1 ef1`us ]
 {
 [e :U _DISPLAY_Write ]
 [v _num `us ~T0 @X0 1 r1 ]
 [f ]
-"88
-[; ;Display7seg_74HC595.c: 88:     uint8_t digit1=16;
+"92
+[; ;Display7seg_74HC595.c: 92:     uint8_t digit1=16;
 [v _digit1 `uc ~T0 @X0 1 a ]
 [e = _digit1 -> -> 16 `i `uc ]
-"89
-[; ;Display7seg_74HC595.c: 89:     uint8_t digit2=16;
+"93
+[; ;Display7seg_74HC595.c: 93:     uint8_t digit2=16;
 [v _digit2 `uc ~T0 @X0 1 a ]
 [e = _digit2 -> -> 16 `i `uc ]
-"90
-[; ;Display7seg_74HC595.c: 90:     uint8_t digit3=16;
+"94
+[; ;Display7seg_74HC595.c: 94:     uint8_t digit3=16;
 [v _digit3 `uc ~T0 @X0 1 a ]
 [e = _digit3 -> -> 16 `i `uc ]
-"91
-[; ;Display7seg_74HC595.c: 91:     uint8_t digit4=16;
+"95
+[; ;Display7seg_74HC595.c: 95:     uint8_t digit4=16;
 [v _digit4 `uc ~T0 @X0 1 a ]
 [e = _digit4 -> -> 16 `i `uc ]
-"93
-[; ;Display7seg_74HC595.c: 93:     if (num<10){
-[e $ ! < -> _num `ui -> -> 10 `i `ui 841  ]
+"96
+[; ;Display7seg_74HC595.c: 96:     uint8_t digit5=16;
+[v _digit5 `uc ~T0 @X0 1 a ]
+[e = _digit5 -> -> 16 `i `uc ]
+"97
+[; ;Display7seg_74HC595.c: 97:     uint8_t digit6=16;
+[v _digit6 `uc ~T0 @X0 1 a ]
+[e = _digit6 -> -> 16 `i `uc ]
+"99
+[; ;Display7seg_74HC595.c: 99:     if (num<10){
+[e $ ! < -> _num `ui -> -> 10 `i `ui 839  ]
 {
-"94
-[; ;Display7seg_74HC595.c: 94:         digit4 = (uint8_t)(num);
+"100
+[; ;Display7seg_74HC595.c: 100:         digit4 = (uint8_t)(num);
 [e = _digit4 -> _num `uc ]
-"95
-[; ;Display7seg_74HC595.c: 95:     }
+"101
+[; ;Display7seg_74HC595.c: 101:     }
+}
+[e $U 840  ]
+"102
+[; ;Display7seg_74HC595.c: 102:     else if (num<100){
+[e :U 839 ]
+[e $ ! < -> _num `ui -> -> 100 `i `ui 841  ]
+{
+"103
+[; ;Display7seg_74HC595.c: 103:         digit4 = (uint8_t)(num%10);
+[e = _digit4 -> % -> _num `ui -> -> 10 `i `ui `uc ]
+"104
+[; ;Display7seg_74HC595.c: 104:         digit3 = (uint8_t)(num/10);
+[e = _digit3 -> / -> _num `ui -> -> 10 `i `ui `uc ]
+"105
+[; ;Display7seg_74HC595.c: 105:     }
 }
 [e $U 842  ]
-"96
-[; ;Display7seg_74HC595.c: 96:     else if (num<100){
-[e :U 841 ]
-[e $ ! < -> _num `ui -> -> 100 `i `ui 843  ]
-{
-"97
-[; ;Display7seg_74HC595.c: 97:         digit4 = (uint8_t)(num%10);
-[e = _digit4 -> % -> _num `ui -> -> 10 `i `ui `uc ]
-"98
-[; ;Display7seg_74HC595.c: 98:         digit3 = (uint8_t)(num/10);
-[e = _digit3 -> / -> _num `ui -> -> 10 `i `ui `uc ]
-"99
-[; ;Display7seg_74HC595.c: 99:     }
-}
-[e $U 844  ]
-"100
-[; ;Display7seg_74HC595.c: 100:     else if (num<1000){
-[e :U 843 ]
-[e $ ! < -> _num `ui -> -> 1000 `i `ui 845  ]
-{
-"101
-[; ;Display7seg_74HC595.c: 101:         digit4 = (uint8_t)(num%10);
-[e = _digit4 -> % -> _num `ui -> -> 10 `i `ui `uc ]
-"102
-[; ;Display7seg_74HC595.c: 102:         digit3 = (uint8_t)((num%100)/10);
-[e = _digit3 -> / % -> _num `ui -> -> 100 `i `ui -> -> 10 `i `ui `uc ]
-"103
-[; ;Display7seg_74HC595.c: 103:         digit2 = (uint8_t)(num/100);
-[e = _digit2 -> / -> _num `ui -> -> 100 `i `ui `uc ]
-"104
-[; ;Display7seg_74HC595.c: 104:     }
-}
-[e $U 846  ]
-"105
-[; ;Display7seg_74HC595.c: 105:     else {
-[e :U 845 ]
-{
 "106
-[; ;Display7seg_74HC595.c: 106:         digit4 = (uint8_t)(num%10);
-[e = _digit4 -> % -> _num `ui -> -> 10 `i `ui `uc ]
+[; ;Display7seg_74HC595.c: 106:     else if (num<1000){
+[e :U 841 ]
+[e $ ! < -> _num `ui -> -> 1000 `i `ui 843  ]
+{
 "107
-[; ;Display7seg_74HC595.c: 107:         digit3 = (uint8_t)((num%100)/10);
-[e = _digit3 -> / % -> _num `ui -> -> 100 `i `ui -> -> 10 `i `ui `uc ]
+[; ;Display7seg_74HC595.c: 107:         digit4 = (uint8_t)(num%10);
+[e = _digit4 -> % -> _num `ui -> -> 10 `i `ui `uc ]
 "108
-[; ;Display7seg_74HC595.c: 108:         digit2 = (uint8_t)((num%1000)/100);
-[e = _digit2 -> / % -> _num `ui -> -> 1000 `i `ui -> -> 100 `i `ui `uc ]
+[; ;Display7seg_74HC595.c: 108:         digit3 = (uint8_t)((num%100)/10);
+[e = _digit3 -> / % -> _num `ui -> -> 100 `i `ui -> -> 10 `i `ui `uc ]
 "109
-[; ;Display7seg_74HC595.c: 109:         digit1 = (uint8_t)(num/1000);
-[e = _digit1 -> / -> _num `ui -> -> 1000 `i `ui `uc ]
+[; ;Display7seg_74HC595.c: 109:         digit2 = (uint8_t)(num/100);
+[e = _digit2 -> / -> _num `ui -> -> 100 `i `ui `uc ]
 "110
 [; ;Display7seg_74HC595.c: 110:     }
 }
-[e :U 846 ]
+[e $U 844  ]
+"111
+[; ;Display7seg_74HC595.c: 111:     else {
+[e :U 843 ]
+{
+"112
+[; ;Display7seg_74HC595.c: 112:         digit4 = (uint8_t)(num%10);
+[e = _digit4 -> % -> _num `ui -> -> 10 `i `ui `uc ]
+"113
+[; ;Display7seg_74HC595.c: 113:         digit3 = (uint8_t)((num%100)/10);
+[e = _digit3 -> / % -> _num `ui -> -> 100 `i `ui -> -> 10 `i `ui `uc ]
+"114
+[; ;Display7seg_74HC595.c: 114:         digit2 = (uint8_t)((num%1000)/100);
+[e = _digit2 -> / % -> _num `ui -> -> 1000 `i `ui -> -> 100 `i `ui `uc ]
+"115
+[; ;Display7seg_74HC595.c: 115:         digit1 = (uint8_t)(num/1000);
+[e = _digit1 -> / -> _num `ui -> -> 1000 `i `ui `uc ]
+"116
+[; ;Display7seg_74HC595.c: 116:     }
+}
 [e :U 844 ]
 [e :U 842 ]
-"111
-[; ;Display7seg_74HC595.c: 111:   DISPLAY_Set(digit1, digit2, digit3, digit4);
-[e ( _DISPLAY_Set (4 , , , _digit1 _digit2 _digit3 _digit4 ]
-"112
-[; ;Display7seg_74HC595.c: 112:   }
-[e :UE 840 ]
+[e :U 840 ]
+"117
+[; ;Display7seg_74HC595.c: 117:   DISPLAY_Set(digit1, digit2, digit3, digit4, digit5, digit6);
+[e ( _DISPLAY_Set (4 , , , , , _digit1 _digit2 _digit3 _digit4 _digit5 _digit6 ]
+"118
+[; ;Display7seg_74HC595.c: 118:   }
+[e :UE 838 ]
 }
-"122
-[; ;Display7seg_74HC595.c: 122: void DISPLAY_Update(void){
+"128
+[; ;Display7seg_74HC595.c: 128: void DISPLAY_Update(void){
 [v _DISPLAY_Update `(v ~T0 @X0 1 ef ]
 {
 [e :U _DISPLAY_Update ]
 [f ]
-"123
-[; ;Display7seg_74HC595.c: 123:     if((NUMBERS_OF_DISPLAYS % 2) == 0){
-[e $ ! == % -> _NUMBERS_OF_DISPLAYS `i -> 2 `i -> 0 `i 848  ]
-{
-"124
-[; ;Display7seg_74HC595.c: 124:         for (int8_t i=0; i<NUMBERS_OF_DISPLAYS; i++){
-{
-[v _i `c ~T0 @X0 1 a ]
-[e = _i -> -> 0 `i `c ]
-[e $U 852  ]
-[e :U 849 ]
-{
-"125
-[; ;Display7seg_74HC595.c: 125:             DRIVER_74HC595_ShiftOut(display_values[i]);
-[e ( _DRIVER_74HC595_ShiftOut (1 *U + &U _display_values * -> -> _i `uc `ux -> -> # *U &U _display_values `ui `ux ]
-"126
-[; ;Display7seg_74HC595.c: 126:         }
-}
-[e ++ _i -> -> 1 `i `c ]
-[e :U 852 ]
-[e $ < -> _i `i -> _NUMBERS_OF_DISPLAYS `i 849  ]
-[e :U 850 ]
-}
-"127
-[; ;Display7seg_74HC595.c: 127:     }
-}
-[e $U 853  ]
-"128
-[; ;Display7seg_74HC595.c: 128:     else{
-[e :U 848 ]
-{
 "129
-[; ;Display7seg_74HC595.c: 129:         for (int8_t i=0; i<=NUMBERS_OF_DISPLAYS; i++){
-{
-[v _i `c ~T0 @X0 1 a ]
-[e = _i -> -> 0 `i `c ]
-[e $U 857  ]
-[e :U 854 ]
+[; ;Display7seg_74HC595.c: 129:     if((NUMBERS_OF_DISPLAYS % 2) == 0){
+[e $ ! == % -> _NUMBERS_OF_DISPLAYS `i -> 2 `i -> 0 `i 846  ]
 {
 "130
-[; ;Display7seg_74HC595.c: 130:             DRIVER_74HC595_ShiftOut(display_values[i]);
-[e ( _DRIVER_74HC595_ShiftOut (1 *U + &U _display_values * -> -> _i `uc `ux -> -> # *U &U _display_values `ui `ux ]
+[; ;Display7seg_74HC595.c: 130:         for (int8_t i=0; i<NUMBERS_OF_DISPLAYS; i++){
+{
+[v _i `c ~T0 @X0 1 a ]
+[e = _i -> -> 0 `i `c ]
+[e $U 850  ]
+[e :U 847 ]
+{
 "131
-[; ;Display7seg_74HC595.c: 131:         }
+[; ;Display7seg_74HC595.c: 131:             DRIVER_74HC595_ShiftOut(display_values[i]);
+[e ( _DRIVER_74HC595_ShiftOut (1 *U + &U _display_values * -> -> _i `uc `ux -> -> # *U &U _display_values `ui `ux ]
+"132
+[; ;Display7seg_74HC595.c: 132:         }
 }
 [e ++ _i -> -> 1 `i `c ]
-[e :U 857 ]
-[e $ <= -> _i `i -> _NUMBERS_OF_DISPLAYS `i 854  ]
-[e :U 855 ]
+[e :U 850 ]
+[e $ < -> _i `i -> _NUMBERS_OF_DISPLAYS `i 847  ]
+[e :U 848 ]
 }
-"132
-[; ;Display7seg_74HC595.c: 132:     }
+"133
+[; ;Display7seg_74HC595.c: 133:     }
 }
-[e :U 853 ]
+[e $U 851  ]
 "134
-[; ;Display7seg_74HC595.c: 134:     do { LATBbits.LATB1 = 1; } while(0);
-[e :U 860 ]
+[; ;Display7seg_74HC595.c: 134:     else{
+[e :U 846 ]
+{
+"135
+[; ;Display7seg_74HC595.c: 135:         for (int8_t i=0; i<=NUMBERS_OF_DISPLAYS; i++){
+{
+[v _i `c ~T0 @X0 1 a ]
+[e = _i -> -> 0 `i `c ]
+[e $U 855  ]
+[e :U 852 ]
+{
+"136
+[; ;Display7seg_74HC595.c: 136:             DRIVER_74HC595_ShiftOut(display_values[i]);
+[e ( _DRIVER_74HC595_ShiftOut (1 *U + &U _display_values * -> -> _i `uc `ux -> -> # *U &U _display_values `ui `ux ]
+"137
+[; ;Display7seg_74HC595.c: 137:         }
+}
+[e ++ _i -> -> 1 `i `c ]
+[e :U 855 ]
+[e $ <= -> _i `i -> _NUMBERS_OF_DISPLAYS `i 852  ]
+[e :U 853 ]
+}
+"138
+[; ;Display7seg_74HC595.c: 138:     }
+}
+[e :U 851 ]
+"140
+[; ;Display7seg_74HC595.c: 140:     do { LATBbits.LATB1 = 1; } while(0);
+[e :U 858 ]
 {
 [e = . . _LATBbits 0 1 -> -> 1 `i `uc ]
 }
-[e :U 859 ]
-"135
-[; ;Display7seg_74HC595.c: 135:     do { LATBbits.LATB1 = 0; } while(0);
-[e :U 863 ]
+[e :U 857 ]
+"141
+[; ;Display7seg_74HC595.c: 141:     do { LATBbits.LATB1 = 0; } while(0);
+[e :U 861 ]
 {
 [e = . . _LATBbits 0 1 -> -> 0 `i `uc ]
 }
-[e :U 862 ]
-"136
-[; ;Display7seg_74HC595.c: 136:   }
-[e :UE 847 ]
+[e :U 860 ]
+"142
+[; ;Display7seg_74HC595.c: 142:   }
+[e :UE 845 ]
 }
-"146
-[; ;Display7seg_74HC595.c: 146: void DRIVER_74HC595_ShiftOut(uint8_t data){
+"152
+[; ;Display7seg_74HC595.c: 152: void DRIVER_74HC595_ShiftOut(uint8_t data){
 [v _DRIVER_74HC595_ShiftOut `(v ~T0 @X0 1 ef1`uc ]
 {
 [e :U _DRIVER_74HC595_ShiftOut ]
 [v _data `uc ~T0 @X0 1 r1 ]
 [f ]
-"148
-[; ;Display7seg_74HC595.c: 148:     for (uint8_t i=0; i<8; i++){
+"154
+[; ;Display7seg_74HC595.c: 154:     for (uint8_t i=0; i<8; i++){
 {
 [v _i `uc ~T0 @X0 1 a ]
 [e = _i -> -> 0 `i `uc ]
-[e $ < -> _i `i -> 8 `i 865  ]
-[e $U 866  ]
-[e :U 865 ]
+[e $ < -> _i `i -> 8 `i 863  ]
+[e $U 864  ]
+[e :U 863 ]
 {
-"149
-[; ;Display7seg_74HC595.c: 149:         if (data & (0x80>>i)){
-[e $ ! != & -> _data `i >> -> 128 `i -> _i `i -> 0 `i 868  ]
+"155
+[; ;Display7seg_74HC595.c: 155:         if (data & (0x80>>i)){
+[e $ ! != & -> _data `i >> -> 128 `i -> _i `i -> 0 `i 866  ]
 {
-"150
-[; ;Display7seg_74HC595.c: 150:             do { LATBbits.LATB0 = 1; } while(0);
-[e :U 871 ]
+"156
+[; ;Display7seg_74HC595.c: 156:             do { LATBbits.LATB0 = 1; } while(0);
+[e :U 869 ]
 {
 [e = . . _LATBbits 0 0 -> -> 1 `i `uc ]
 }
-[e :U 870 ]
-"151
-[; ;Display7seg_74HC595.c: 151:             }
-}
-[e $U 872  ]
-"152
-[; ;Display7seg_74HC595.c: 152:         else{
 [e :U 868 ]
+"157
+[; ;Display7seg_74HC595.c: 157:             }
+}
+[e $U 870  ]
+"158
+[; ;Display7seg_74HC595.c: 158:         else{
+[e :U 866 ]
 {
-"153
-[; ;Display7seg_74HC595.c: 153:             do { LATBbits.LATB0 = 0; } while(0);
-[e :U 875 ]
+"159
+[; ;Display7seg_74HC595.c: 159:             do { LATBbits.LATB0 = 0; } while(0);
+[e :U 873 ]
 {
 [e = . . _LATBbits 0 0 -> -> 0 `i `uc ]
 }
-[e :U 874 ]
-"154
-[; ;Display7seg_74HC595.c: 154:             }
-}
 [e :U 872 ]
-"156
-[; ;Display7seg_74HC595.c: 156:         do { LATBbits.LATB2 = 1; } while(0);
-[e :U 878 ]
+"160
+[; ;Display7seg_74HC595.c: 160:             }
+}
+[e :U 870 ]
+"162
+[; ;Display7seg_74HC595.c: 162:         do { LATBbits.LATB2 = 1; } while(0);
+[e :U 876 ]
 {
 [e = . . _LATBbits 0 2 -> -> 1 `i `uc ]
 }
-[e :U 877 ]
-"157
-[; ;Display7seg_74HC595.c: 157:         do { LATBbits.LATB2 = 0; } while(0);
-[e :U 881 ]
+[e :U 875 ]
+"163
+[; ;Display7seg_74HC595.c: 163:         do { LATBbits.LATB2 = 0; } while(0);
+[e :U 879 ]
 {
 [e = . . _LATBbits 0 2 -> -> 0 `i `uc ]
 }
-[e :U 880 ]
-"158
-[; ;Display7seg_74HC595.c: 158:     }
+[e :U 878 ]
+"164
+[; ;Display7seg_74HC595.c: 164:     }
 }
 [e ++ _i -> -> 1 `i `uc ]
-[e $ < -> _i `i -> 8 `i 865  ]
-[e :U 866 ]
+[e $ < -> _i `i -> 8 `i 863  ]
+[e :U 864 ]
 }
-"159
-[; ;Display7seg_74HC595.c: 159: }
-[e :UE 864 ]
+"165
+[; ;Display7seg_74HC595.c: 165: }
+[e :UE 862 ]
 }

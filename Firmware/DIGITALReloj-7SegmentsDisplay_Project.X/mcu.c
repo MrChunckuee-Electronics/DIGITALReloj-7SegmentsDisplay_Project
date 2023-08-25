@@ -8,8 +8,10 @@
 #include "main.h"
 
 uint8_t tmr0_counterMs = 0;
+uint8_t mSeconds = 0, Seconds = 0;
 uint8_t dotsCounter = 0;
-uint8_t timeToDisplay[7]; //HH:MM:SS AM/PM
+uint8_t timeToDisplay[7]; // Displays time in HH:MM:SS AM/PM format
+uint8_t dateToDisplay[7]; // Displays Date in DD:MM:YY @ Day format
 
 /*******************************************************************************
  * Function:        void SYSTEM_Initialize(void)
@@ -44,12 +46,8 @@ void SYSTEM_Process(void){
         tmr0_counterMs++;
         if(tmr0_counterMs>99){
             tmr0_counterMs = 0;
-            dotsCounter++;
-            if(dotsCounter>5){
-                dotsCounter = 0;
-                dotsEnable ^= true;
-            }
-            DisplayTimeToLCD(Get_DS1307_RTC_Time());
+            MCU_SetModeDisplay();
+            MCU_SetOutDisplay();
         }
         TMR0_OVR_FLAG = false;
     }    
@@ -112,45 +110,79 @@ void TMR0_Initialize(void){
 
 void RTC_Initialize(void){
     // Set initial time
-	Set_DS1307_RTC_Time(PM_Time, 5, 7, 0);	// Set time 11:30:00 PM
+	Set_DS1307_RTC_Time(AM_Time, 12, 12, 0);	// Set time 11:30:00 PM
 	// Set initial date
-	Set_DS1307_RTC_Date(4, 8, 23, Friday); 	// Set 25-07-2017 @ Tuesday
+	Set_DS1307_RTC_Date(20, 8, 23, Sunday); 	// Set 25-07-2017 @ Tuesday
 }
 
-void DisplayTimeToLCD(unsigned char* pTimeArray){   // Displays time in HH:MM:SS AM/PM format  
+void MCU_SetModeDisplay(void){
+    mSeconds++;
+    if(mSeconds>9){
+        mSeconds = 0;
+        Seconds ++;
+        if(Seconds >59)
+            Seconds = 0;
+        switch(Seconds){
+            case 0:
+                displayMode = showTime;
+                break;
+            case 49:
+                displayMode = showDate;
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+void MCU_SetOutDisplay(void){
+    switch (displayMode){
+        case showTime:
+            dotsCounter++;
+            if(dotsCounter>9){
+                dotsCounter = 0;
+                dotsEnable ^= true;
+            }
+            UpdateTimeToDisplay(Get_DS1307_RTC_Time());
+            break;
+        case showDate:
+            UpdateDateToDisplay(Get_DS1307_RTC_Date());
+            break;
+        default:
+            break;
+    }
+}
+
+void UpdateTimeToDisplay(unsigned char* pTimeArray){   // Displays time in HH:MM:SS AM/PM format  
     // Display Hour
-    timeToDisplay[0] = (pTimeArray[2]/10); 
-    timeToDisplay[1] = (pTimeArray[2]%10);
+    timeToDisplay[0] = pTimeArray[2]/10; 
+    timeToDisplay[1] = pTimeArray[2]%10;
 	//Display Minutes
-    timeToDisplay[2] = (pTimeArray[1]/10); 
-    timeToDisplay[3] = (pTimeArray[1]%10);
+    timeToDisplay[2] = pTimeArray[1]/10; 
+    timeToDisplay[3] = pTimeArray[1]%10;
     //Display Seconds
-    timeToDisplay[4] = (pTimeArray[0]/10); 
-    timeToDisplay[5] = (pTimeArray[0]%10);
-//	LCD_Putrs(" ", 8, 0 );
+    timeToDisplay[4] = pTimeArray[0]/10; 
+    timeToDisplay[5] = pTimeArray[0]%10;
     // Display mode
 //	switch(pTimeArray[3]){
 //        case AM_Time:   LCD_Putrs("AM", 9, 0);  break;
 //        case PM_Time:   LCD_Putrs("PM", 9, 0);  break;
 //        default:        LCD_Putrs('H', 9, 0);   break;
 //	}
-   DISPLAY_Set(timeToDisplay[0], timeToDisplay[1], timeToDisplay[2], timeToDisplay[3]);
+   DISPLAY_Set(timeToDisplay[0], timeToDisplay[1], timeToDisplay[2], timeToDisplay[3], timeToDisplay[4], timeToDisplay[5]);
 }
 
-void DisplayDateOnLCD( unsigned char* pDateArray ){   // Displays Date in DD:MM:YY @ Day format
-//	// Display Date
-//	LCD_Putc_xy( (pDateArray[1]/10)+0x30, 0, 1 );
-//	LCD_Putc_xy( (pDateArray[1]%10)+0x30, 1, 1 );
-//	LCD_Putrs("/", 2, 1);
-//    //Display Month
-//	LCD_Putc_xy( (pDateArray[2]/10)+0x30, 3, 1 );
-//	LCD_Putc_xy( (pDateArray[2]%10)+0x30, 4, 1 );
-//	LCD_Putrs("/", 5, 1);
-//	//Display Year
-//	LCD_Putc_xy( (pDateArray[3]/10)+0x30, 6, 1 );
-//	LCD_Putc_xy( (pDateArray[3]%10)+0x30, 7, 1 );
-//	LCD_Putrs(" ", 8, 1);
-//	// Display Day
+void UpdateDateToDisplay( unsigned char* pDateArray ){   // Displays Date in DD:MM:YY @ Day format
+	// Display Date
+    dateToDisplay[0] = pDateArray[1]/10; 
+    dateToDisplay[1] = pDateArray[1]%10; 
+    //Display Month
+    dateToDisplay[2] = pDateArray[2]/10; 
+    dateToDisplay[3] = pDateArray[2]%10; 
+	//Display Year
+    dateToDisplay[4] = pDateArray[3]/10; 
+    dateToDisplay[5] = pDateArray[3]%10; 
+	// Display Day
 //	switch(pDateArray[0]){
 //        case Monday:	LCD_Putrs("MON", 9, 1);	break;
 //        case Tuesday:	LCD_Putrs("TUE", 9, 1);	break;
@@ -161,4 +193,5 @@ void DisplayDateOnLCD( unsigned char* pDateArray ){   // Displays Date in DD:MM:
 //        case Sunday:	LCD_Putrs("SUN", 9, 1);	break;
 //        default:        LCD_Putrs("???", 9, 1);	break;
 //	}
+    DISPLAY_Set(dateToDisplay[0], dateToDisplay[1], dateToDisplay[2], dateToDisplay[3], dateToDisplay[4], dateToDisplay[5]);
 }

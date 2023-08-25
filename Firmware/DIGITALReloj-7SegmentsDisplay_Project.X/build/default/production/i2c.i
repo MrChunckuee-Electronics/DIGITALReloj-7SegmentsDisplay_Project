@@ -9805,7 +9805,12 @@ unsigned char I2C2_Read(void);
 
 
 # 1 "./mcu.h" 1
-# 19 "./mcu.h"
+# 18 "./mcu.h"
+uint8_t displayMode = 0;
+
+enum {showTime = 0, showDate};
+
+
 void SYSTEM_Initialize(void);
 void SYSTEM_Process(void);
 void MCU_Initialize(void);
@@ -9814,13 +9819,16 @@ void IO_LEDPrintChar(uint8_t LEDCHAR);
 void IO_LEDHello(void);
 void TMR0_Initialize(void);
 void RTC_Initialize(void);
-void DisplayDateOnLCD(unsigned char* pDateArray);
-void DisplayTimeToLCD(unsigned char* pTimeArray);
+
+void MCU_SetModeDisplay(void);
+void MCU_SetOutDisplay(void);
+void UpdateDateToDisplay(unsigned char* pDateArray);
+void UpdateTimeToDisplay(unsigned char* pTimeArray);
 # 25 "./main.h" 2
 
 # 1 "./Display7seg_74HC595.h" 1
 # 16 "./Display7seg_74HC595.h"
-uint8_t NUMBERS_OF_DISPLAYS = 4;
+uint8_t NUMBERS_OF_DISPLAYS = 6;
 _Bool dotsEnable = 0;
 # 48 "./Display7seg_74HC595.h"
 uint8_t digits[]={
@@ -9843,10 +9851,10 @@ uint8_t digits[]={
     (uint8_t)~(0)
     };
 # 78 "./Display7seg_74HC595.h"
-uint8_t display_values[6];
+uint8_t display_values[7];
 
 
-void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4);
+void DISPLAY_Set(uint8_t D1, uint8_t D2, uint8_t D3, uint8_t D4, uint8_t D5, uint8_t D6);
 void DISPLAY_Reset(void);
 void DISPLAY_Write(uint16_t num);
 void DISPLAY_Update(void);

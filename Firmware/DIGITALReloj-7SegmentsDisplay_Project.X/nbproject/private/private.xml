@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/mrchu/Documentos/MRCHUNCKUEE_Personal/MPLABX%20-%20XC8/DIGITALReloj-7SegmentsDisplay_Project.X/main.c</file>
+            <file>file:/C:/Users/mrchu/Documentos/GitHub/PROYECTOS/DIGITALReloj-7SegmentsDisplay_Project/Firmware/DIGITALReloj-7SegmentsDisplay_Project.X/mcu.c</file>
+            <file>file:/C:/Users/mrchu/Documentos/GitHub/PROYECTOS/DIGITALReloj-7SegmentsDisplay_Project/Firmware/DIGITALReloj-7SegmentsDisplay_Project.X/Display7seg_74HC595.h</file>
+            <file>file:/C:/Users/mrchu/Documentos/GitHub/PROYECTOS/DIGITALReloj-7SegmentsDisplay_Project/Firmware/DIGITALReloj-7SegmentsDisplay_Project.X/mcu.h</file>
+            <file>file:/C:/Users/mrchu/Documentos/GitHub/PROYECTOS/DIGITALReloj-7SegmentsDisplay_Project/Firmware/DIGITALReloj-7SegmentsDisplay_Project.X/Display7seg_74HC595.c</file>
+            <file>file:/C:/Users/mrchu/Documentos/GitHub/PROYECTOS/DIGITALReloj-7SegmentsDisplay_Project/Firmware/DIGITALReloj-7SegmentsDisplay_Project.X/i2c.c</file>
+            <file>file:/C:/Users/mrchu/Documentos/GitHub/PROYECTOS/DIGITALReloj-7SegmentsDisplay_Project/Firmware/DIGITALReloj-7SegmentsDisplay_Project.X/main.c</file>
         </group>
     </open-files>
 </project-private>
